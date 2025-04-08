@@ -1,0 +1,18 @@
+# Dependency directories
+vendor/
+composer.lock
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+
+# System files
+.DS_Store
