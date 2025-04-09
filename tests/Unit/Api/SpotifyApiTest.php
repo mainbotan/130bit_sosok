@@ -5,17 +5,21 @@ require(__DIR__.'/../../../vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../');
 $dotenv->load();
 
-// Составляем конфиг
+// Подключаем кэш
+use App\Core\RedisCache;
+$redis_cache = new RedisCache();
+
+echo "<pre>";
+
+// Апи авторизации
+use App\Api\Spotify\Autho as SpotifyAuthoApi;
 $spotify_config = [
     'client_id' => $_ENV['SPOTIFY_CLIENT_ID'],
     'client_secret' => $_ENV['SPOTIFY_CLIENT_SECRET'],
     'api_url' => $_ENV['SPOTIFY_API_URL'],
     'token_url' => $_ENV['SPOTIFY_TOKEN_URL']
 ];
-
-// Тестируемое апи
-use App\Api\Spotify\Autho as SpotifyAuthoApi;
-$spotify_autho_api = new SpotifyAuthoApi($spotify_config);
+$spotify_autho_api = new SpotifyAuthoApi($redis_cache, $spotify_config);
 
 // Запрос за токеном
 try {
@@ -23,11 +27,27 @@ try {
 } catch (Exception $e) {
     var_dump(($e->getMessage()));
 }
-var_dump($access_token);
 
-// Тестируемое апи
-use App\Api\Spotify\Album as SpotifyAlbumApi;
-$spotify_album_api = new SpotifyAlbumApi($access_token, $spotify_config['api_url']);
+// Сервис прокси
+use App\Services\ProxyService as ProxyService;
+use App\config\proxy as ProxyConfig;
+$proxy_config = new ProxyConfig();
+$proxy_config = array_merge(
+    $proxy_config->get(),
+    ['token' => $_ENV['PROXY_TOKEN'] ?? null,
+    'url' => $_ENV['PROXY_URL'] ?? null]
+);
+$proxy_service = new ProxyService($proxy_config);
+
+
+// Запрос к апи с использованием прокси
+use App\Api\Spotify\Albums as SpotifyAlbumApi;
+$spotify_album_api = new SpotifyAlbumApi(
+    $redis_cache,
+    $access_token,
+    $spotify_config['api_url'],
+    $proxy_service
+);
 $result = $spotify_album_api->getAlbum([
     'id' => '0fSfkmx0tdPqFYkJuNX74a'
 ]);

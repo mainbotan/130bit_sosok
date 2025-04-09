@@ -3,19 +3,19 @@ namespace App\Api\Spotify;
 use App\Core\RedisCache as RedisCache;
 
 class Autho{
-    private RedisCache $cache;
     private array $spotifyConfig;
     private string $clientId;
     private string $clientSecret;
     private string $tokenUrl;
 
-    public function __construct($spotifyConfig)
-    {
+    public function __construct(
+        private RedisCache $cache,
+        $spotifyConfig
+    ){
         $this->spotifyConfig = $spotifyConfig;
         $this->clientId = $spotifyConfig['client_id'];
         $this->clientSecret = $spotifyConfig['client_secret'];
         $this->tokenUrl = $spotifyConfig['token_url'];
-        $this->cache = new RedisCache();
     }
 
     public function getAccessToken(): ?string
