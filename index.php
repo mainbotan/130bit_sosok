@@ -31,12 +31,13 @@ class Router{
         $this->requestBody = $requestBody;
         $this->DBH = $DBH;
     }
-    /**
-     * Обработка запроса
-     */
+    // Обработка запроса
     public function handleRequest(): string {
         // Пробуем декодировать тело
         $input_data = $this->decodeRequest();
+
+        // Перебрасываем на нужный контроллер
+
 
         // Здесь нужно как-то определить подключаемый контроллер
         return $this->formatAnswer([
