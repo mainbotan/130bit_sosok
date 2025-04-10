@@ -51,8 +51,6 @@ class Router {
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
         }
-
-
         // Подготавливаем заголовки
         $headers = [
             "Authorization: Bearer {$this->access_token}",

@@ -30,7 +30,24 @@ class Artists {
         }
 
         $endpoint = "/artists/{$options['id']}/top-tracks";
-        $params = ['market' => $options['market']];
+        $params = ['market' => $options['market'] ?? 'US'];
+
+        return $this->router->route($endpoint, $params);
+    }
+
+    public function getArtistAlbums(array $options): array {
+        if (empty($options['id'])) {
+            throw new \InvalidArgumentException("Artist ID is required");
+        }
+
+        $endpoint = "/artists/{$options['id']}/albums";
+        $params = [];
+
+        $params['include_groups'] = $options['include_groups'] ?? [];
+        $params['include_groups'] = implode(',', $params['include_groups']);
+        $params['market'] = $options['market'] ?? 'US';
+        $params['limit'] = $options['limit'] ?? 10;
+        $params['offset'] = $options['offset'] ?? 0;
 
         return $this->router->route($endpoint, $params);
     }

@@ -64,8 +64,14 @@ $spotify_artists_api = new SpotifyArtistsApi($spotify_router);
 $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
 $spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
 
-$result = $spotify_playlists_api->getPlaylist([
-    'id' => '50iY6munHRsEHFeMlQraVz'
+$result = $spotify_artists_api->getArtistAlbums([
+    'id' => '1URnnhqYAYcrqrcwql10ft', // ID артиста
+    'include_groups' => [
+        'appears_on'
+    ],
+    'market' => 'US',
+    'limit' => 10,
+    'offset' => 0
 ]);
 
 var_dump($result);
