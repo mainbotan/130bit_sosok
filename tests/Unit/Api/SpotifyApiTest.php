@@ -57,21 +57,24 @@ use App\Api\Spotify\Artists as SpotifyArtistsApi;
 use App\Api\Spotify\Tracks as SpotifyTracksApi;
 use App\Api\Spotify\Playlists as SpotifyPlaylistsApi;
 use App\Api\Spotify\Audiobooks as SpotifyAudiobooksApi;
+use App\Api\Spotify\Search as SpotifySearchApi;
 
 $spotify_album_api = new SpotifyAlbumApi($spotify_router);
 $spotify_tracks_api = new SpotifyTracksApi($spotify_router);
 $spotify_artists_api = new SpotifyArtistsApi($spotify_router);
 $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
 $spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
+$spotify_search_api = new SpotifySearchApi($spotify_router);
 
-$result = $spotify_artists_api->getArtistAlbums([
-    'id' => '1URnnhqYAYcrqrcwql10ft', // ID артиста
-    'include_groups' => [
-        'appears_on'
-    ],
-    'market' => 'US',
-    'limit' => 10,
-    'offset' => 0
+$result = $spotify_album_api->getAlbum([
+  'id' => '18NOKLkZETa4sWwLMIm0UZ'  
 ]);
+
+// $result = $spotify_search_api->search([
+//     'query' => 'Playboi Carti',
+//     'type' => ['artist', 'album'],
+//     'offset' => 0,
+//     'limit' => 10
+// ]);
 
 var_dump($result);

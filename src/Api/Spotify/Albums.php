@@ -31,6 +31,7 @@ class Albums {
 
         $endpoint = "/albums";
         $params = ['ids' => implode(',', $options['ids'])];
+        $params = array_filter($params, fn($v) => $v !== null);
 
         return $this->router->route($endpoint, $params);
     }
@@ -45,7 +46,7 @@ class Albums {
 
         if (!empty($options['limit'])) $params['limit'] = $options['limit'];
         if (!empty($options['offset'])) $params['offset'] = $options['offset'];
-
+        $params = array_filter($params, fn($v) => $v !== null);
         return $this->router->route($endpoint, $params);
     }
 }

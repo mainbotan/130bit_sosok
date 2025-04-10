@@ -20,6 +20,7 @@ class Artists {
 
         $endpoint = "/artists";
         $params = ['ids' => implode(',', $options['ids'])];
+        $params = array_filter($params, fn($v) => $v !== null);
 
         return $this->router->route($endpoint, $params);
     }
@@ -32,6 +33,7 @@ class Artists {
         $endpoint = "/artists/{$options['id']}/top-tracks";
         $params = ['market' => $options['market'] ?? 'US'];
 
+        $params = array_filter($params, fn($v) => $v !== null);
         return $this->router->route($endpoint, $params);
     }
 
@@ -49,6 +51,7 @@ class Artists {
         $params['limit'] = $options['limit'] ?? 10;
         $params['offset'] = $options['offset'] ?? 0;
 
+        $params = array_filter($params, fn($v) => $v !== null);
         return $this->router->route($endpoint, $params);
     }
 }

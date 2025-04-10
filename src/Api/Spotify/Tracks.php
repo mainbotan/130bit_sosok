@@ -20,6 +20,7 @@ class Tracks {
 
         $endpoint = "/tracks";
         $params = ['ids' => implode(',', $options['ids'])];
+        $params = array_filter($params, fn($v) => $v !== null);
 
         return $this->router->route($endpoint, $params);
     }

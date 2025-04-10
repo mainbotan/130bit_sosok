@@ -56,7 +56,6 @@ class Router {
             "Authorization: Bearer {$this->access_token}",
             "Content-Type: application/json"
         ];
-
         // Инициализируем cURL запрос
         $ch = curl_init($this->proxy_service->getUrl($url, $headers));
         curl_setopt_array($ch, [
@@ -69,7 +68,7 @@ class Router {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $curlError = curl_error($ch);
         curl_close($ch);
-
+        
         if ($response === false) {
             $this->logger->error("CURL error: {$curlError}");
             throw new \Exception("CURL error: $curlError");
@@ -77,10 +76,10 @@ class Router {
 
         // Декодируем ответ
         $parsed = json_decode($response, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $this->logger->error("JSON decode error: " . json_last_error_msg());
-            throw new \Exception("JSON decode error: " . json_last_error_msg());
-        }
+        // if (json_last_error() !== JSON_ERROR_NONE) {
+        //     $this->logger->error("JSON decode error: " . json_last_error_msg());
+        //     throw new \Exception("JSON decode error: " . json_last_error_msg());
+        // }
 
         // Обрабатываем ошибки API
         if ($httpCode >= 400) {

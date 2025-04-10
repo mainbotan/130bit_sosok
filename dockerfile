@@ -1,6 +1,5 @@
 FROM php:8.2-apache
 
-# Установка необходимых зависимостей и расширений
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libzip-dev \
@@ -9,8 +8,5 @@ RUN apt-get update && apt-get install -y \
     zip \
     gd
 
-# Включите mod_rewrite для Apache
-RUN a2enmod rewrite
-
-# Убедитесь, что расширения активированы
 RUN docker-php-ext-enable pdo_mysql
+RUN a2enmod rewrite

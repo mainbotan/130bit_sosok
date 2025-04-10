@@ -1,11 +1,13 @@
 services:
   php:
-    image: php:8.2-apache
+    build:
+      context: .         # указывает на текущую папку (где Dockerfile)
+      dockerfile: Dockerfile
     ports:
       - "8000:80"
     volumes:
       - .:/var/www/html
-      - composer_data:/tmp/composer  # Кэш Composer
+      - composer_data:/tmp/composer
     depends_on:
       mysql:
         condition: service_healthy
@@ -15,8 +17,8 @@ services:
     command: >
       bash -c "docker-php-entrypoint apache2-foreground"
     environment:
-      COMPOSER_HOME: /tmp/composer  # Указываем, где хранить кэш Composer
-
+      COMPOSER_HOME: /tmp/composer
+      
   # Composer как отдельный сервис (удобно для запуска composer install/update)
   composer:
     image: composer:2
