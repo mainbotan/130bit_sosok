@@ -39,16 +39,33 @@ $proxy_config = array_merge(
 );
 $proxy_service = new ProxyService($proxy_config);
 
-
-// Запрос к апи с использованием прокси
-use App\Api\Spotify\Albums as SpotifyAlbumApi;
-$spotify_album_api = new SpotifyAlbumApi(
+// Объявляем роутер
+use App\Services\LoggerService as LoggerService;
+$logger = new LoggerService();
+use App\Api\Spotify\Router as SpotifyRouter;
+$spotify_router = new SpotifyRouter(
     $redis_cache,
     $access_token,
     $spotify_config['api_url'],
-    $proxy_service
+    $proxy_service,
+    $logger
 );
-$result = $spotify_album_api->getAlbum([
-    'id' => '0fSfkmx0tdPqFYkJuNX74a'
+
+// Запрос к апи с использованием прокси
+use App\Api\Spotify\Albums as SpotifyAlbumApi;
+use App\Api\Spotify\Artists as SpotifyArtistsApi;
+use App\Api\Spotify\Tracks as SpotifyTracksApi;
+use App\Api\Spotify\Playlists as SpotifyPlaylistsApi;
+use App\Api\Spotify\Audiobooks as SpotifyAudiobooksApi;
+
+$spotify_album_api = new SpotifyAlbumApi($spotify_router);
+$spotify_tracks_api = new SpotifyTracksApi($spotify_router);
+$spotify_artists_api = new SpotifyArtistsApi($spotify_router);
+$spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
+$spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
+
+$result = $spotify_playlists_api->getPlaylist([
+    'id' => '50iY6munHRsEHFeMlQraVz'
 ]);
+
 var_dump($result);
