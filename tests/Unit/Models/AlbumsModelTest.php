@@ -9,3 +9,4 @@ $dotenv->load();
 // Подключение к бд
 use App\Core\Database as Database;
 $result = Database::getInstance();
+

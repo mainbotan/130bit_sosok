@@ -12,32 +12,30 @@ class Database
     {
         if (self::$instance === null) {
             $config = require __DIR__ . '/../config/database.php';
-            $mysql = $config['mysql'];
+            $pgsql = $config['pgsql'];
 
             $dsn = sprintf(
-                'mysql:host=%s;port=%d;dbname=%s;charset=%s',
-                $mysql['host'],
-                $mysql['port'],
-                $mysql['dbname'],
-                $mysql['charset']
+                'pgsql:host=%s;port=%d;dbname=%s',
+                $pgsql['host'],
+                $pgsql['port'],
+                $pgsql['dbname']
             );
 
             try {
                 self::$instance = new PDO(
                     $dsn,
-                    $mysql['user'],
-                    $mysql['password'],
-                    $mysql['options']
+                    $pgsql['user'],
+                    $pgsql['password'],
+                    $pgsql['options']
                 );
-                
-                // Тестовый запрос для проверки
+
                 self::$instance->query("SELECT 1")->fetch();
             } catch (\PDOException $e) {
                 throw new \RuntimeException(sprintf(
-                    "Failed to connect to MySQL: %s\nHost: %s\nPort: %d\nCheck your docker-compose networks",
+                    "Failed to connect to PostgreSQL: %s\nHost: %s\nPort: %d",
                     $e->getMessage(),
-                    $mysql['host'],
-                    $mysql['port']
+                    $pgsql['host'],
+                    $pgsql['port']
                 ));
             }
         }
