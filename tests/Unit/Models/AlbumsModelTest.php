@@ -19,10 +19,8 @@ use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
 use App\Models\Album as AlbumModel;
 $album_repository = new AlbumRepository($pdo);
 
-// Инициализация
-$result = $album_repository->getById('2QRedhP5RmKJiJ1i8VgDGR');
-
-// $result = $album_repository->getAll(100, 0);
+// // Инициализация
+$result = $album_repository->getAll(100, 0);
 
 // Вывод результата
 var_dump($result);
