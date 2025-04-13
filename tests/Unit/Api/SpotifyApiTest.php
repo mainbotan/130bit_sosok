@@ -66,31 +66,41 @@ $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
 $spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
 $spotify_search_api = new SpotifySearchApi($spotify_router);
 
-$album = $spotify_album_api->getAlbum([
-  'id' => '2QRedhP5RmKJiJ1i8VgDGR'  
+$result = $spotify_artists_api->getArtist([
+    'id' => '3gBZUcNeVumkeeJ19CY2sX'
 ]);
-
 // $result = $spotify_search_api->search([
 //     'query' => 'Playboi Carti',
 //     'type' => ['artist', 'album'],
 //     'offset' => 0,
 //     'limit' => 10
 // ]);
-
+var_dump($result);
 
 // Подключение к бд
 use App\Core\Database as Database;
 $pdo = Database::getInstance();
 
-use App\Repositories\AlbumRepository as AlbumRepository;
-use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
-$album_repository = new AlbumRepository($pdo);
-$dto = new AlbumCreateDTO($album);
+use App\Repositories\ArtistRepository as ArtistRepository;
+use App\DTO\ArtistCreateDTO as ArtistCreateDTO;
+use App\Models\Artist as ArtistModel;
+$artist_repository = new ArtistRepository($pdo);
 
-// Инициализация
-$result = $album_repository->create($dto);
-// Вывод результата
-var_dump($result);
+// // // Инициализация
+// $result = $artist_repository->create(new ArtistCreateDTO(
+//     $artist
+// ));
+// var_dump($result);
+
+// use App\Repositories\AlbumRepository as AlbumRepository;
+// use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
+// $album_repository = new AlbumRepository($pdo);
+// $dto = new AlbumCreateDTO($album);
+
+// // Инициализация
+// $result = $album_repository->create($dto);
+// // Вывод результата
+// var_dump($result);
 
 
 // // Инициализация

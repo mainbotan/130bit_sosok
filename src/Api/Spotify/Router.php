@@ -36,7 +36,6 @@ class Router {
         if ($uri !== '') { 
             $uri = "spotify:{$uri}"; 
         }
-
         // Проверяем кэш
         if ($is_cache) {
             $cached = $this->cache->get($uri);
