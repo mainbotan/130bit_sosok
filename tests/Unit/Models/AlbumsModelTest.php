@@ -12,16 +12,18 @@ $pdo = Database::getInstance();
 
 
 // AlbumRepository
+echo "<pre>";
 
 use App\Repositories\AlbumRepository as AlbumRepository;
 use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
+use App\Models\Album as AlbumModel;
 $album_repository = new AlbumRepository($pdo);
-$dto = new AlbumCreateDTO([
-    'id' => '213123123',
-    'name' => 'ХУИЛА',
-    'uri' => 'asdasd:213123:asdasd',
-    'artists' => [1, 2, 3]
-]);
-$result = $album_repository->create($dto);
+
+// Инициализация
+$result = $album_repository->getById('2QRedhP5RmKJiJ1i8VgDGR');
+
+// $result = $album_repository->getAll(100, 0);
+
+// Вывод результата
 var_dump($result);
 
