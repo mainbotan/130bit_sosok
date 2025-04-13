@@ -24,3 +24,4 @@ $dto = new AlbumCreateDTO([
 ]);
 $result = $album_repository->create($dto);
 var_dump($result);
+

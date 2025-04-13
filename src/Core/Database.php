@@ -11,6 +11,12 @@ class Database
     public static function getInstance(): PDO
     {
         if (self::$instance === null) {
+            // Грузим .env если ещё не загружен
+            if (!isset($_ENV['POSTGRES_DB'])) {
+                $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+                $dotenv->load();
+            }
+
             $config = require __DIR__ . '/../config/database.php';
             $pgsql = $config['pgsql'];
 
@@ -42,4 +48,5 @@ class Database
 
         return self::$instance;
     }
+
 }

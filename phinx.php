@@ -2,6 +2,13 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
+// Загружаем переменные из .env
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+// Загружаем конфиг базы данных
+$dbConfig = require __DIR__ . '/src/config/database.php';
+
 return [
     'paths' => [
         'migrations' => '%%PHINX_CONFIG_DIR%%/migrations',
@@ -12,12 +19,12 @@ return [
         'default_environment' => 'development',
         'development' => [
             'adapter' => 'pgsql',
-            'host' => getenv('POSTGRES_HOST'),
-            'name' => getenv('POSTGRES_DB'),
-            'user' => getenv('POSTGRES_USER'),
-            'pass' => getenv('POSTGRES_PASSWORD'),
-            'port' => getenv('POSTGRES_PORT'),
-            'charset' => 'utf8',
+            'host' => $dbConfig['pgsql']['host'],
+            'name' => $dbConfig['pgsql']['dbname'],
+            'user' => $dbConfig['pgsql']['user'],
+            'pass' => $dbConfig['pgsql']['password'],
+            'port' => $dbConfig['pgsql']['port'],
+            'charset' => $dbConfig['pgsql']['charset']
         ],
     ],
 ];
