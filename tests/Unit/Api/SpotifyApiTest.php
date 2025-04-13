@@ -66,8 +66,8 @@ $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
 $spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
 $spotify_search_api = new SpotifySearchApi($spotify_router);
 
-$result = $spotify_album_api->getAlbum([
-  'id' => '18NOKLkZETa4sWwLMIm0UZ'  
+$album = $spotify_album_api->getAlbum([
+  'id' => '2QRedhP5RmKJiJ1i8VgDGR'  
 ]);
 
 // $result = $spotify_search_api->search([
@@ -77,4 +77,25 @@ $result = $spotify_album_api->getAlbum([
 //     'limit' => 10
 // ]);
 
+
+// Подключение к бд
+use App\Core\Database as Database;
+$pdo = Database::getInstance();
+
+use App\Repositories\AlbumRepository as AlbumRepository;
+use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
+$album_repository = new AlbumRepository($pdo);
+$dto = new AlbumCreateDTO($album);
+
+// Инициализация
+$result = $album_repository->create($dto);
+// Вывод результата
 var_dump($result);
+
+
+// // Инициализация
+// $result = $album_repository->getAll(100, 0);
+// // Вывод результата
+// var_dump($result);
+
+
