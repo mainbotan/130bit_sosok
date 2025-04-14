@@ -20,7 +20,7 @@ use App\Models\Playlist as PlaylistModel;
 $playlist_repository = new PlaylistRepository($pdo);
 
 // Инициализация
-$result = $playlist_repository->getAll(100, 0);
+$result = $playlist_repository->searchByName('грусть', 20, 0);
 
 // Вывод результата
 var_dump($result);
