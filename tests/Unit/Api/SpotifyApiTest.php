@@ -66,8 +66,8 @@ $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_router);
 $spotify_audiobooks_api = new SpotifyAudiobooksApi($spotify_router);
 $spotify_search_api = new SpotifySearchApi($spotify_router);
 
-$track = $spotify_tracks_api->getTrack([
-    'id' => '0gF3J1BaegNk9PN4Zi8r0a'
+$playlist = $spotify_playlists_api->getPlaylist([
+    'id' => '50iY6munHRsEHFeMlQraVz'
 ]);
 // $result = $spotify_search_api->search([
 //     'query' => 'Playboi Carti',
@@ -75,22 +75,34 @@ $track = $spotify_tracks_api->getTrack([
 //     'offset' => 0,
 //     'limit' => 10
 // ]);
-var_dump($track);
+var_dump($playlist);
 
 // Подключение к бд
 use App\Core\Database as Database;
 $pdo = Database::getInstance();
 
-use App\Repositories\TrackRepository as TrackRepository;
-use App\DTO\TrackCreateDTO as TrackCreateDTO;
-use App\Models\Track as TrackModel;
-$track_repository = new TrackRepository($pdo);
+use App\Repositories\PlaylistRepository as PlaylistRepository;
+use App\DTO\PlaylistCreateDTO as PlaylistCreateDTO;
+use App\Models\Playlist as PlaylistModel;
+$playlist_repository = new PlaylistRepository($pdo);
 
-// // Инициализация
-$result = $track_repository->create(new TrackCreateDTO(
-    $track
+// Инициализация
+$result = $playlist_repository->create(new PlaylistCreateDTO(
+    $playlist
 ));
 var_dump($result);
+
+
+// use App\Repositories\TrackRepository as TrackRepository;
+// use App\DTO\TrackCreateDTO as TrackCreateDTO;
+// use App\Models\Track as TrackModel;
+// $track_repository = new TrackRepository($pdo);
+
+// // // Инициализация
+// $result = $track_repository->create(new TrackCreateDTO(
+//     $track
+// ));
+// var_dump($result);
 
 // use App\Repositories\AlbumRepository as AlbumRepository;
 // use App\DTO\AlbumCreateDTO as AlbumCreateDTO;
