@@ -41,7 +41,7 @@ class Router {
             $cached = $this->cache->get($uri);
             if (!empty($cached)) {
                 $this->logger->info("Cache hit for {$uri}");
-                return json_decode($cached, true);
+                return json_decode($cached, true)['response'];
             }
         }
 
