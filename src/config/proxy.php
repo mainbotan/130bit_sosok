@@ -7,7 +7,7 @@ class Proxy{
      */
     public function get(): array{
         return [
-            'isProxy' => true
+            'isProxy' => false
         ];
     }
 }

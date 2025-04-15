@@ -1,28 +1,27 @@
 <?php
-
 namespace App\Repositories;
 
 use PDO;
-use App\DTO\AlbumCreateDTO;
-use App\DTO\AlbumUpdateDTO;
-use App\Models\Album as AlbumModel;
+use App\DTO\ArtistCreateDTO;
+use App\DTO\ArtistUpdateDTO;
+use App\Models\Artist as ArtistModel;
 
-class AlbumRepository
+class ArtistRepository
 {
     public function __construct(
         private PDO $pdo
     ) {}
 
     /**
-     * Поиск по name + primary_artist_name
-     * @param string query - поисковая строка
+     * Поиск по имени
+     * @param string $query - поисковая строка
      * @return array|null
      */
     public function searchByName(string $query, int $limit = 20, int $offset = 0): ?array
     {
         $stmt = $this->pdo->prepare("
-            SELECT * FROM albums 
-            WHERE name ILIKE :query OR primary_artist_name ILIKE :query
+            SELECT * FROM artists 
+            WHERE name ILIKE :query OR uri ILIKE :query
             ORDER BY popularity DESC
             LIMIT :limit OFFSET :offset
         ");
@@ -33,18 +32,18 @@ class AlbumRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new AlbumModel($row), $results);
+        return array_map(fn($row) => new ArtistModel($row), $results);
     }
 
     /**
-     * Удаление
-     * @param int $id
+     * Удаление артиста
+     * @param string $id
      * @return bool
      */
     public function delete(string $id): bool
     {
         $stmt = $this->pdo->prepare("
-            DELETE FROM albums
+            DELETE FROM artists
             WHERE id = :id
         ");
 
@@ -54,12 +53,12 @@ class AlbumRepository
     }
 
     /**
-     * Изменение полей
-     * @param int $id
-     * @param array $fields
+     * Изменение данных артиста
+     * @param string $id
+     * @param ArtistUpdateDTO $dto
      * @return bool 
      */
-    public function update(string $id, AlbumUpdateDTO $dto): bool
+    public function update(string $id, ArtistUpdateDTO $dto): bool
     {
         $fields = $dto->getFields();
 
@@ -78,7 +77,7 @@ class AlbumRepository
         $setClause = implode(', ', $setParts);
 
         $stmt = $this->pdo->prepare("
-            UPDATE albums
+            UPDATE artists
             SET $setClause
             WHERE id = :id
         ");
@@ -89,14 +88,14 @@ class AlbumRepository
     }
 
     /**
-     * Получение по имени (точное совпадение)
+     * Получение артиста по имени (точное совпадение)
      * @param string $name 
-     * @return AlbumModel|null
+     * @return ArtistModel|null
      */
-    public function getByName(string $name): ?AlbumModel
+    public function getByName(string $name): ?ArtistModel
     {
         $stmt = $this->pdo->prepare("
-            SELECT * FROM albums 
+            SELECT * FROM artists 
             WHERE name = :name 
             LIMIT 1
         ");
@@ -105,11 +104,11 @@ class AlbumRepository
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result ? new AlbumModel($result) : null;
+        return $result ? new ArtistModel($result) : null;
     }
 
     /**
-     * Получение из списка id
+     * Получение списка артистов по id
      * @param array $ids
      * @param int $limit
      * @param int $offset
@@ -121,7 +120,7 @@ class AlbumRepository
             return [];
         }
 
-        // Генерим подстановки для безопасного IN-запроса
+        // Генерация подстановок для безопасного IN-запроса
         $placeholders = [];
         $params = [];
 
@@ -135,7 +134,7 @@ class AlbumRepository
 
         // Добавляем лимит и оффсет
         $stmt = $this->pdo->prepare("
-            SELECT * FROM albums 
+            SELECT * FROM artists
             WHERE id IN ($inClause)
             ORDER BY popularity DESC
             LIMIT :limit OFFSET :offset
@@ -151,31 +150,30 @@ class AlbumRepository
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return array_map(fn($row) => new AlbumModel($row), $results);
+        return array_map(fn($row) => new ArtistModel($row), $results);
     }
 
     /**
-     * Выборка по Id
+     * Получение артиста по Id
      * @param string $id
-     * @return array
+     * @return ArtistModel|null
      */
-    public function getById(string $id): ?AlbumModel
+    public function getById(string $id): ?ArtistModel
     {   
         $stmt = $this->pdo->prepare("
-            SELECT * FROM albums
-            WHERE id=:id
+            SELECT * FROM artists
+            WHERE id = :id
         ");
-        $stmt->execute([
-            'id' => $id
-        ]);
-        if ($stmt->rowCount() == 1){
-            return new AlbumModel($stmt->fetch(PDO::FETCH_ASSOC));
+        $stmt->execute(['id' => $id]);
+
+        if ($stmt->rowCount() == 1) {
+            return new ArtistModel($stmt->fetch(PDO::FETCH_ASSOC));
         }
         return null;
     }
 
     /**
-     * Выборка всех альбомов
+     * Получение всех артистов
      * @param int $limit 
      * @param int $offset
      * @return array
@@ -183,55 +181,43 @@ class AlbumRepository
     public function getAll(int $limit, int $offset): array
     {
         $stmt = $this->pdo->prepare("
-            SELECT * FROM albums 
-            ORDER BY id DESC 
-            LIMIT :limit OFFSET :offset 
+            SELECT * FROM artists
+            ORDER BY id DESC
+            LIMIT :limit OFFSET :offset
         ");
-        $stmt->execute([
-            'limit' => $limit,
-            'offset' => $offset
-        ]);
+        $stmt->execute(['limit' => $limit, 'offset' => $offset]);
+
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new AlbumModel($row), $rows);
+        return array_map(fn($row) => new ArtistModel($row), $rows);
     }
 
     /**
-     * Создание записи альбома
-     * @param AlbumCreateDto $dto - объект дто
+     * Создание записи артиста
+     * @param ArtistCreateDTO $dto - объект DTO
      * @return bool - результат сохранения
      */
-    public function create(AlbumCreateDTO $dto): bool
+    public function create(ArtistCreateDTO $dto): bool
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO albums (
-                id, uri, name, artists, images, upc,
-                release_date, total_tracks, tracks, genres,
-                label, meta, popularity, 
-                primary_artist_id, primary_artist_name
+            INSERT INTO artists (
+                id, uri, name, is_verified, is_tracking, followers, images, genres, meta, 
+                popularity
             ) VALUES (
-                :id, :uri, :name, :artists, :images, :upc,
-                :release_date, :total_tracks, :tracks, :genres,
-                :label, :meta, :popularity,
-                :primary_artist_id, :primary_artist_name
+                :id, :uri, :name, :is_verified, :is_tracking, :followers, :images, :genres, :meta, 
+                :popularity
             )
         ");
-        $stmt->execute([
-            'id' => $dto->id,
-            'uri' => $dto->uri,
-            'name' => $dto->name,
-            'artists' => $dto->artists,
-            'images' => $dto->images,
-            'upc' => $dto->upc,
-            'release_date' => $dto->release_date,
-            'total_tracks' => $dto->total_tracks,
-            'tracks' => $dto->tracks,
-            'genres' => $dto->genres,
-            'label' => $dto->label,
-            'meta' => $dto->meta,
-            'popularity' => $dto->popularity,
-            'primary_artist_id' => $dto->primary_artist_id,
-            'primary_artist_name' => $dto->primary_artist_name
-        ]);
+        $stmt->bindValue('id', $dto->id);
+        $stmt->bindValue('uri', $dto->uri);
+        $stmt->bindValue('name', $dto->name);
+        $stmt->bindValue('is_verified', $dto->is_verified, PDO::PARAM_BOOL);
+        $stmt->bindValue('is_tracking', $dto->is_tracking, PDO::PARAM_BOOL);
+        $stmt->bindValue('followers', $dto->followers, PDO::PARAM_INT);
+        $stmt->bindValue('images', $dto->images);
+        $stmt->bindValue('genres', $dto->genres);
+        $stmt->bindValue('meta', $dto->meta);
+        $stmt->bindValue('popularity', $dto->popularity, PDO::PARAM_INT);
+        $stmt->execute();
         return $stmt->rowCount() > 0;
     }
 }

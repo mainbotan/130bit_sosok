@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class UpdateAlbumDTO
+class ArtistUpdateDTO
 {
     private array $fields = [];
 
@@ -10,10 +10,8 @@ class UpdateAlbumDTO
     {
         // Пример валидации только известных полей
         $allowed = [
-            'name', 'uri', 'artists', 'images', 'upc',
-            'release_date', 'total_tracks', 'tracks', 'genres',
-            'label', 'meta', 'popularity',
-            'primary_artist_id', 'primary_artist_name'
+            'name', 'uri', 'is_verified', 'is_tracking', 'followers', 'images', 
+            'genres', 'meta', 'popularity', 'primary_artist_id', 'primary_artist_name'
         ];
 
         foreach ($allowed as $key) {

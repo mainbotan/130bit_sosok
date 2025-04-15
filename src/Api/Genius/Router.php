@@ -1,5 +1,5 @@
 <?php
-namespace App\Api\Spotify;
+namespace App\Api\Genius;
 
 use App\Core\RedisCache;
 use App\Services\ProxyService;
@@ -34,14 +34,14 @@ class Router {
     ): array {
         // Если URI передан, то формируем его
         if ($uri !== '') { 
-            $uri = "spotify:{$uri}"; 
+            $uri = "genius:{$uri}"; 
         }
         // Проверяем кэш
         if ($is_cache) {
             $cached = $this->cache->get($uri);
             if (!empty($cached)) {
                 $this->logger->info("Cache hit for {$uri}");
-                return json_decode($cached, true);
+                return json_decode($cached, true)['response'];
             }
         }
 
@@ -83,8 +83,8 @@ class Router {
         // Обрабатываем ошибки API
         if ($httpCode >= 400) {
             $errorMsg = $parsed['error']['message'] ?? 'Unknown error';
-            $this->logger->error("Spotify API error ($httpCode): $errorMsg");
-            throw new \Exception("Spotify API error ($httpCode): $errorMsg");
+            $this->logger->error("Genius API error ($httpCode): $errorMsg");
+            throw new \Exception("Genius API error ($httpCode): $errorMsg");
         }
 
         // Сохраняем в кэш, если необходимо
@@ -93,6 +93,6 @@ class Router {
             $this->logger->info("Cached response for {$uri}");
         }
         
-        return $parsed;
+        return $parsed['response'];
     }
 }
