@@ -42,10 +42,10 @@ $genius_search = new GeniusSearch($genius_router);
 $genius_songs = new GeniusSongs($genius_router);
 $genius_artists = new GeniusArtists($genius_router);
 
-// $result = $genius_search->search(
-//     "We still don't trust you"
-// );
-// $result = $genius_artists->getArtistSongs('44080');
+$result = $genius_search->search(
+    "We still don't trust you"
+);
+$result = $genius_artists->getArtistSongs('44080');
 
 
-// var_dump($result);
+var_dump($result);

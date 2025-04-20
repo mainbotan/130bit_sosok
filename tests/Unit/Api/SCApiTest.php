@@ -38,8 +38,8 @@ $sc_router = new SCRouter(
 use App\Api\SC\Search as SCSearch;
 $sc_search = new SCSearch($sc_router);
 
-// $result = $sc_search->search(
-//     "We still don't trust you"
-// );
+$result = $sc_search->search(
+    "We still don't trust you"
+);
 
-// var_dump($result);
+var_dump($result);
