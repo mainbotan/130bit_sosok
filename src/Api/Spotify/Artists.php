@@ -26,8 +26,8 @@ class Artists {
     }
 
     public function getTopTracks(array $options): array {
-        if (empty($options['id']) || empty($options['market'])) {
-            throw new \InvalidArgumentException("Artist ID and market are required");
+        if (empty($options['id'])) {
+            throw new \InvalidArgumentException("Artist ID are required");
         }
 
         $endpoint = "/artists/{$options['id']}/top-tracks";
