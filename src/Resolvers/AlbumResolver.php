@@ -1,7 +1,7 @@
 <?php
-namespace App\Controllers;
+namespace App\Resolvers;
 
-class AlbumContoller{
+class AlbumResolver{
     public function __construct(
         
     )

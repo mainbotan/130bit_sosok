@@ -25,27 +25,21 @@ $proxy_service = new ProxyService($proxy_config);
 // Объявляем роутер
 use App\Services\LoggerService as LoggerService;
 $logger = new LoggerService();
-use App\Api\Genius\Router as GeniusRouter;
-$genius_router = new GeniusRouter(
+use App\Api\SC\Router as SCRouter;
+$sc_router = new SCRouter(
     $redis_cache,
-    $_ENV['GENIUS_ACCESS_TOKEN'],
-    $_ENV['GENIUS_API_URL'],
+    $_ENV['SC_ACCESS_TOKEN'],
+    $_ENV['SC_CLIENT_ID'],
+    $_ENV['SC_API_URL'],
     $proxy_service,
     $logger
 );
-
 // Тестируем
-use App\Api\Genius\Search as GeniusSearch;
-use App\Api\Genius\Songs as GeniusSongs;
-use App\Api\Genius\Artists as GeniusArtists;
-$genius_search = new GeniusSearch($genius_router);
-$genius_songs = new GeniusSongs($genius_router);
-$genius_artists = new GeniusArtists($genius_router);
+use App\Api\SC\Search as SCSearch;
+$sc_search = new SCSearch($sc_router);
 
-$result = $genius_search->search(
+$result = $sc_search->search(
     "We still don't trust you"
 );
-$result = $genius_artists->getArtistSongs('44080');
-
 
 var_dump($result);
