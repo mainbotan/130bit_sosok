@@ -11,8 +11,10 @@ $dotenv->load();
 use App\Services\Spotify\AuthoService as SpotifyAuthoService;
 use App\Services\Spotify\ArtistsService as SpotifyArtistsService;
 use App\Services\Spotify\AlbumsService as SpotifyAlbumsService;
+use App\Services\Spotify\TracksService as SpotifyTracksService;
 use App\Api\Spotify\Artists as SpotifyArtistsApi;
 use App\Api\Spotify\Albums as SpotifyAlbumsApi;
+use App\Api\Spotify\Tracks as SpotifyTracksApi;
 
 $spotify_autho_service = new SpotifyAuthoService();
 $spotify_autho_answer = $spotify_autho_service->getRouter();
@@ -47,6 +49,7 @@ if ($spotify_autho_answer->code === 200){
     // );
     // var_dump($spotify_artist_albums_answer);
 
+
     // Тест сервиса альбомов
 
     // $spotify_albums_api = new SpotifyAlbumsApi($spotify_autho_answer->result);
@@ -68,4 +71,19 @@ if ($spotify_autho_answer->code === 200){
     // var_dump($spotify_several_albums_answer);
 
 
+
+    // Тест сервиса треков
+
+    // $spotify_tracks_api = new SpotifyTracksApi($spotify_autho_answer->result);
+    // $spotify_tracks_service = new SpotifyTracksService($spotify_tracks_api);
+
+    // $spotify_track_answer = $spotify_tracks_service->getTrackById(
+    //     '7lBwQzYymGLZz9ybb4isD0'
+    // );
+    // var_dump($spotify_track_answer);
+
+    // $spotify_tracks_answer = $spotify_tracks_service->getSeveralTracks(
+    //     ['7sVbKoBdhXtYCEOO6qC1SN', '1Aw7MLqN5oqvIva5KWDpGl']
+    // );
+    // var_dump($spotify_tracks_answer);
 }

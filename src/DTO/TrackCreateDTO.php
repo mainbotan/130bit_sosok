@@ -70,11 +70,9 @@ class TrackCreateDTO
                     $cleaned['artists']
                 ) ?? null;
             }
-            
             if (isset($cleaned['album'])) {
                 $this->album = new AlbumCreateDTO($cleaned['album'], $encode) ?? null;
             }
-            
             $this->genres = $cleaned['genres'] ?? null;
             $this->meta = $cleaned['meta'] ?? null;
         }
