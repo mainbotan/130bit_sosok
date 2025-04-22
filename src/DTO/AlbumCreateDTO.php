@@ -57,7 +57,7 @@ class AlbumCreateDTO
             if (isset($cleaned['tracks'])) {
                 $this->tracks = array_map(
                     fn(array $item) => new TrackCreateDTO($item, $encode),
-                    $cleaned['tracks']
+                    $cleaned['tracks']['items']
                 ) ?? null;
             }
             $this->images = $cleaned['images'];
