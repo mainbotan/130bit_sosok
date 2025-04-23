@@ -11,6 +11,7 @@ $dotenv->load();
 use App\Services\Genius\AuthoService as GeniusAuthoService;
 use App\Services\Genius\ArtistsService as GeniusArtistsService;
 use App\Services\Genius\SearchService as GeniusSearchService;
+use App\Services\Genius\SongsService as GeniusSongsService;
 use App\Api\Genius\Artists as GeniusArtistsApi;
 use App\Api\Genius\Search as GeniusSearchApi;
 use App\Api\Genius\Songs as GeniusSongsApi;
@@ -42,5 +43,15 @@ if ($genius_autho_answer->code === 200){
     //     'knife talk'
     // );
     // var_dump($genius_search_answer);
+
+    // Тест сервиса треков
+
+    // $genius_songs_api = new GeniusSongsApi($genius_autho_answer->result);
+    // $genius_songs_service = new GeniusSongsService($genius_songs_api);
+
+    // $genius_song_answer = $genius_songs_service->getSongById(
+    //     7165580, []
+    // );
+    // var_dump($genius_song_answer);
 
 }

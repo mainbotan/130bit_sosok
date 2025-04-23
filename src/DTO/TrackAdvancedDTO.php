@@ -20,6 +20,8 @@ class TrackAdvancedDTO
     public ?string $lyrics_owner_id;
     public ?string $release_date;
     public ?int $annotation_count;
+    public ?string $apple_music_player;
+    public ?string $description;
 
     public array|string|null $stats;
     public array|string|null $artists;
@@ -38,6 +40,7 @@ class TrackAdvancedDTO
         $this->image = $data['header_image_url'] ?? null;
         $this->lyrics_owner_id = $data['lyrics_owner_id'] ?? null;
         $this->annotation_count = $data['annotation_count'] ?? null;
+        $this->apple_music_player = $data['apple_music_player_url'] ?? null;
 
         // Parse release date safely
         $this->release_date = $this->parseReleaseDate($data['release_date_components'] ?? null);
@@ -48,11 +51,26 @@ class TrackAdvancedDTO
             $data['featured_artists'] ?? []
         );
 
+        // Description handling (multiple possible formats)
+        $this->description = $this->extractDescription($data['description'] ?? null);
+
         // Encode or keep as objects
         $this->stats = $this->safeEncode($data['stats'] ?? [], $encode);
         $this->artists = $encode 
             ? $this->safeEncode($artists, $encode) 
             : $this->mapArtists($artists, $encode);
+    }
+
+    protected function extractDescription(?array $description): ?string
+    {
+        if (empty($description)) {
+            return null;
+        }
+
+        return $description['plain'] 
+            ?? $description['html'] 
+            ?? $description['dom'] 
+            ?? null;
     }
 
     protected function parseReleaseDate(?array $components): ?string
