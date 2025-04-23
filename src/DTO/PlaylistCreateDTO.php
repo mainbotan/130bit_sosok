@@ -4,6 +4,10 @@ namespace App\DTO;
 
 use App\Helpers\RemoveAvailableMarkets;
 
+// Вложенные структуры
+use App\DTO\TrackCreateDTO;
+use App\DTO\ArtistCreateDTO;
+
 class PlaylistCreateDTO
 {
     public string $id;
@@ -18,7 +22,7 @@ class PlaylistCreateDTO
     public string $owner_name;
 
     public string $images;
-    public string $tracks;
+    public string | array | null $tracks;
 
     public int $followers;
     public ?string $genres;
@@ -27,7 +31,7 @@ class PlaylistCreateDTO
 
     public ?string $snapshot_id;
 
-    public function __construct(array $data)
+    public function __construct(array $data, bool $encode = true)
     {
         $cleaned = RemoveAvailableMarkets::clean($data);
 
@@ -43,8 +47,6 @@ class PlaylistCreateDTO
         $this->owner_name = $cleaned['owner']['display_name'] ?? $cleaned['owner']['id'];
 
         $this->images = json_encode($cleaned['images'] ?? [], JSON_UNESCAPED_UNICODE);
-        $this->tracks = json_encode($cleaned['tracks'] ?? [], JSON_UNESCAPED_UNICODE);
-
         $this->followers = $cleaned['followers']['total'] ?? 0;
         $this->genres = isset($cleaned['genres']) ? json_encode($cleaned['genres'], JSON_UNESCAPED_UNICODE) : null;
         $this->meta = isset($cleaned['meta']) ? json_encode($cleaned['meta'], JSON_UNESCAPED_UNICODE) : '{}';
@@ -52,5 +54,16 @@ class PlaylistCreateDTO
         $this->popularity = (int) ($cleaned['popularity'] ?? 30);
 
         $this->snapshot_id = $cleaned['snapshot_id'] ?? null;
+
+        if ($encode){
+            $this->tracks = json_encode($cleaned['tracks']['items'] ?? [], JSON_UNESCAPED_UNICODE);
+        }else{
+            if (isset($cleaned['tracks'])){
+                $this->tracks = array_map(
+                    fn(array $item) => new TrackCreateDTO($item['track'], $encode),
+                    $cleaned['tracks']['items']
+                ) ?? null;
+            }
+        }
     }
 }

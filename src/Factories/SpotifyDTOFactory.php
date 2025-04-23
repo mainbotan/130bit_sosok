@@ -5,6 +5,8 @@ namespace App\Factories;
 use App\DTO\ArtistCreateDTO;
 use App\DTO\AlbumCreateDTO;
 use App\DTO\TrackCreateDTO;
+use App\DTO\PlaylistCreateDTO;
+use App\Models\Playlist;
 
 class SpotifyDTOFactory
 {
@@ -22,6 +24,11 @@ class SpotifyDTOFactory
     public static function track(array $data, $encode=true): TrackCreateDTO
     {
         return new TrackCreateDTO($data, $encode);
+    }
+
+    public static function playlist(array $data, $encode=true): PlaylistCreateDTO
+    {
+        return new PlaylistCreateDTO($data, $encode);
     }
 
     // Коллекции
@@ -44,7 +51,25 @@ class SpotifyDTOFactory
     public static function tracks(array $items, $encode=true): array
     {
         return array_map(
-            fn(array $item) => new TrackCreateDTO($item, $encode),
+            fn(array $item) => new TrackCreateDTO($item, $encode) ?? new TrackCreateDTO($item['track'], $encode),
+            $items
+        );
+    }
+
+    public static function playlists(array $items, $encode=true): array
+    {
+        return array_map(
+            fn(array $item) => new PlaylistCreateDTO($item, $encode),
+            $items
+        );
+    }
+
+    // Специальные коллекции
+
+    public static function playlist_tracks(array $items, $encode=true): array
+    {
+        return array_map(
+            fn(array $item) => new TrackCreateDTO($item['track'], $encode),
             $items
         );
     }

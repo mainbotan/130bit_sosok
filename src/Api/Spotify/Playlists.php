@@ -4,6 +4,7 @@ namespace App\Api\Spotify;
 class Playlists {
     public function __construct(private Router $router) {}
 
+    // Получение плейлиста
     public function getPlaylist(array $options): array {
         if (empty($options['id'])) {
             throw new \InvalidArgumentException("Playlist ID is required");
@@ -13,6 +14,7 @@ class Playlists {
         return $this->router->route($endpoint, [], "playlist:{$options['id']}", true);
     }
 
+    // Получение треков плейлиста
     public function getPlaylistItems(array $options): array {
         if (empty($options['id'])) {
             throw new \InvalidArgumentException("Playlist ID is required");
