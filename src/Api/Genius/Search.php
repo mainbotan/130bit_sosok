@@ -7,7 +7,8 @@ class Search {
     public function __construct(Router $router) {
         $this->router = $router;
     }
-
+    
+    // Поиск
     public function search(string $query, array $params = []): array {
         // Чистим null-значения, чтобы не отправлять лишнее
         $params['q'] = $query;

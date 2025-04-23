@@ -31,7 +31,7 @@ if ($spotify_autho_answer->code === 200){
     // $spotify_artists_service = new SpotifyArtistsService($spotify_artists_api);
 
     // $spotify_artist_answer = $spotify_artists_service->getArtistById(
-    //     '6Ip8FS7vWT1uKkJSweANQK', []
+    //     '0Y5tJX1MQlPlqiwlOH1tJY', []
     // );
     // var_dump($spotify_artist_answer);
 
@@ -116,5 +116,9 @@ if ($spotify_autho_answer->code === 200){
     // $spotify_search_answer = $spotify_search_service->search(
     //     'travis scott', ['type' => ['artist'], 'limit' => 5]
     // );
-    // var_dump($spotify_search_answer);
+    // $first_artist_name = $spotify_search_answer->result['artists'][0]->name;
+
+    // var_dump($first_artist_name);
+
+
 }
