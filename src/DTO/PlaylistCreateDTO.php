@@ -56,9 +56,11 @@ class PlaylistCreateDTO
         $this->snapshot_id = $cleaned['snapshot_id'] ?? null;
 
         if ($encode){
-            $this->tracks = json_encode($cleaned['tracks']['items'] ?? [], JSON_UNESCAPED_UNICODE);
+            if (isset($cleaned['tracks']['items'])) {
+                $this->tracks = json_encode($cleaned['tracks']['items'] ?? [], JSON_UNESCAPED_UNICODE);
+            }
         }else{
-            if (isset($cleaned['tracks'])){
+            if (isset($cleaned['tracks']['items'])){
                 $this->tracks = array_map(
                     fn(array $item) => new TrackCreateDTO($item['track'], $encode),
                     $cleaned['tracks']['items']

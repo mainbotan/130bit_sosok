@@ -51,7 +51,7 @@ class SpotifyDTOFactory
     public static function tracks(array $items, $encode=true): array
     {
         return array_map(
-            fn(array $item) => new TrackCreateDTO($item, $encode) ?? new TrackCreateDTO($item['track'], $encode),
+            fn(array $item) => new TrackCreateDTO($item, $encode),
             $items
         );
     }

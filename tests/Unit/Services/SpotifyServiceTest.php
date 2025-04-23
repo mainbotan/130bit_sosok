@@ -13,10 +13,12 @@ use App\Services\Spotify\ArtistsService as SpotifyArtistsService;
 use App\Services\Spotify\AlbumsService as SpotifyAlbumsService;
 use App\Services\Spotify\TracksService as SpotifyTracksService;
 use App\Services\Spotify\PlaylistsService as SpotifyPlaylistsService;
+use App\Services\Spotify\SearchService as SpotifySearchService;
 use App\Api\Spotify\Artists as SpotifyArtistsApi;
 use App\Api\Spotify\Albums as SpotifyAlbumsApi;
 use App\Api\Spotify\Tracks as SpotifyTracksApi;
 use App\Api\Spotify\Playlists as SpotifyPlaylistsApi;
+use App\Api\Spotify\Search as SpotifySearchApi;
 
 $spotify_autho_service = new SpotifyAuthoService();
 $spotify_autho_answer = $spotify_autho_service->getRouter();
@@ -92,8 +94,8 @@ if ($spotify_autho_answer->code === 200){
 
     // Тест сервиса плейлистов
 
-    $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_autho_answer->result);
-    $spotify_playlists_service = new SpotifyPlaylistsService($spotify_playlists_api);
+    // $spotify_playlists_api = new SpotifyPlaylistsApi($spotify_autho_answer->result);
+    // $spotify_playlists_service = new SpotifyPlaylistsService($spotify_playlists_api);
 
     // $spotify_playlist_answer = $spotify_playlists_service->getPlaylistById(
     //     '50iY6munHRsEHFeMlQraVz'
@@ -104,4 +106,15 @@ if ($spotify_autho_answer->code === 200){
     //     '50iY6munHRsEHFeMlQraVz'
     // );
     // var_dump($spotify_playlist_tracks_answer);
+
+
+    // Тест сервиса поиска
+
+    // $spotify_search_api = new SpotifySearchApi($spotify_autho_answer->result);
+    // $spotify_search_service = new SpotifySearchService($spotify_search_api);
+
+    // $spotify_search_answer = $spotify_search_service->search(
+    //     'travis scott', ['type' => ['artist'], 'limit' => 5]
+    // );
+    // var_dump($spotify_search_answer);
 }
