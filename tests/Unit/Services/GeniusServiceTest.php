@@ -34,7 +34,7 @@ if ($genius_autho_answer->code === 200){
     // var_dump($genius_artist_answer);
 
 
-    // Тест сервиса поиск
+    // Тест сервиса поиска
 
     // $genius_search_api = new GeniusSearchApi($genius_autho_answer->result);
     // $genius_search_service = new GeniusSearchService($genius_search_api);
