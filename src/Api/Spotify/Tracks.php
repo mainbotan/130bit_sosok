@@ -4,6 +4,9 @@ namespace App\Api\Spotify;
 class Tracks {
     public function __construct(private Router $router) {}
 
+    /**
+     * Получение трека
+     */
     public function getTrack(array $options): array {
         if (empty($options['id'])) {
             throw new \InvalidArgumentException("Track ID is required");
@@ -13,6 +16,9 @@ class Tracks {
         return $this->router->route($endpoint, [], "track:{$options['id']}", true);
     }
 
+    /**
+     * Получение несколько треков
+     */
     public function getSeveralTracks(array $options): array {
         if (empty($options['ids']) || !is_array($options['ids'])) {
             throw new \InvalidArgumentException("Array of track IDs is required");

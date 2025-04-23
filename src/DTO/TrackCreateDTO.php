@@ -64,12 +64,15 @@ class TrackCreateDTO
             $this->genres = isset($cleaned['genres']) ? json_encode($cleaned['genres'], JSON_UNESCAPED_UNICODE) : null;
             $this->meta = isset($cleaned['meta']) ? json_encode($cleaned['meta'], JSON_UNESCAPED_UNICODE) : '{}';
         } else {
-            $this->artists = array_map(
-                fn(array $item) => new ArtistCreateDTO($item, $encode),
-                $cleaned['artists']
-            ) ?? null;
-            $this->album = new AlbumCreateDTO($cleaned['album'], $encode) ?? null;
-
+            if (isset($cleaned['artists'])) {
+                $this->artists = array_map(
+                    fn(array $item) => new ArtistCreateDTO($item, $encode),
+                    $cleaned['artists']
+                ) ?? null;
+            }
+            if (isset($cleaned['album'])) {
+                $this->album = new AlbumCreateDTO($cleaned['album'], $encode) ?? null;
+            }
             $this->genres = $cleaned['genres'] ?? null;
             $this->meta = $cleaned['meta'] ?? null;
         }

@@ -13,6 +13,9 @@ class Search {
         int $limit=20,
         int $offset=0
     ): array {
+        if (empty($q)) {
+            throw new \InvalidArgumentException("Query string is required");
+        }
         $params = [
             'q' => $q,
             'limit' => $limit,

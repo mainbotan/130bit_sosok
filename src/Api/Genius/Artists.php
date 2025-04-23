@@ -11,22 +11,21 @@ class Artists {
     /**
      * Получение треков артиста
      * @param string $id - gn id артиста
-     * @param string $sort - тип сортировки
-     * @param int $limit 
-     * @param int $offset
+     * @param array $options - опции 
      * @return array
      */
-    public function getArtistSongs(
+    public function getArtistTracks(
         string $id, 
-        int $limit=20,
-        int $offset=0,
-        string $sort='popularity'
+        array $options
     ): array {
+        if (empty($id)) {
+            throw new \InvalidArgumentException("Artist ID is required");
+        }
         $params = [
             'id' => $id,
-            'limit' => $limit ?? 20,
-            'offset' => $offset ?? 0,
-            'sort' => $sort
+            'limit' => $options['limit'] ?? 20,
+            'offset' => $options['offset'] ?? 0,
+            'sort' => $options['sort'] ?? 'popularity'
         ];
         // Чистим null-значения, чтобы не отправлять лишнее
         $params = array_filter($params, fn($v) => $v !== null);
@@ -46,6 +45,9 @@ class Artists {
      * @return array
      */
     public function getArtist(string $id, string $text_format='plain'): array {
+        if (empty($id)) {
+            throw new \InvalidArgumentException("Artist ID is required");
+        }
         $params = [
             'id' => $id,
             'text_format' => $text_format

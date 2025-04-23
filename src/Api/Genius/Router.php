@@ -41,7 +41,7 @@ class Router {
             $cached = $this->cache->get($uri);
             if (!empty($cached)) {
                 $this->logger->info("Cache hit for {$uri}");
-                return json_decode($cached, true)['response'];
+                return json_decode($cached, true);
             }
         }
 
@@ -75,21 +75,21 @@ class Router {
 
         // Декодируем ответ
         $parsed = json_decode($response, true);
-        // if (json_last_error() !== JSON_ERROR_NONE) {
-        //     $this->logger->error("JSON decode error: " . json_last_error_msg());
-        //     throw new \Exception("JSON decode error: " . json_last_error_msg());
-        // }
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->logger->error("JSON decode error: " . json_last_error_msg());
+            throw new \Exception("JSON decode error: " . json_last_error_msg());
+        }
 
         // Обрабатываем ошибки API
-        if ($httpCode >= 400) {
-            $errorMsg = $parsed['error']['message'] ?? 'Unknown error';
+        if ($httpCode >= 400 or (int) $parsed['meta']['status'] >= 400) {
+            $errorMsg = $parsed['meta']['message'] ?? 'Unknown error';
             $this->logger->error("Genius API error ($httpCode): $errorMsg");
             throw new \Exception("Genius API error ($httpCode): $errorMsg");
         }
 
         // Сохраняем в кэш, если необходимо
         if ($is_cache) {
-            $this->cache->set($uri, $response, 3600);
+            $this->cache->set($uri, json_encode($parsed['response'], JSON_UNESCAPED_UNICODE), 3600);
             $this->logger->info("Cached response for {$uri}");
         }
         
