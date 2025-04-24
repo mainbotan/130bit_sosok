@@ -2,17 +2,15 @@
 
 namespace App\Services\Genius;
 
-use App\Services\BaseService as BaseService;
 use App\Api\Genius\Songs as GeniusSongsApi;
+use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
-class SongsService extends BaseService{
-    private GeniusDTOFactory $genius_dto_factory;
+class SongsService extends BaseContract {
     public function __construct(
-        private GeniusSongsApi $genius_songs
-    ) { 
-        $this->genius_dto_factory = new GeniusDTOFactory();
-    }
+        private GeniusSongsApi $genius_songs,
+        private GeniusDTOFactory $genius_dto_factory
+    ) { }
 
     /**
      * Получение трека по ID

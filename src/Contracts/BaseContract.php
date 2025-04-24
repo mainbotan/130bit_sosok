@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Contracts;
 
-use App\DTO\ServicesResponseDTO;
+use App\DTO\BaseContractResponseDTO;
 
-abstract class BaseService 
+abstract class BaseContract
 {
     const HTTP_OK = 200;
     const HTTP_NOT_FOUND = 404;
@@ -24,8 +24,8 @@ abstract class BaseService
         mixed $result, 
         int $code = self::HTTP_OK, 
         ?string $error = null
-    ): object {
-        return new ServicesResponseDTO(
+    ): BaseContractResponseDTO {
+        return new BaseContractResponseDTO(
             $result,
             $code,
             $error

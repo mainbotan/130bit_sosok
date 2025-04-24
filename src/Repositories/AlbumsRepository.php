@@ -3,11 +3,8 @@
 namespace App\Repositories;
 
 use PDO;
-use App\DTO\AlbumCreateDTO;
-use App\DTO\AlbumUpdateDTO;
-use App\Models\Album as AlbumModel;
 
-class AlbumRepository
+class AlbumsRepository
 {
     public function __construct(
         private PDO $pdo
@@ -33,7 +30,7 @@ class AlbumRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new AlbumModel($row), $results);
+        return $results;
     }
 
     /**
@@ -59,7 +56,7 @@ class AlbumRepository
      * @param array $fields
      * @return bool 
      */
-    public function update(string $id, AlbumUpdateDTO $dto): bool
+    public function update(string $id, $dto): bool
     {
         $fields = $dto->getFields();
 
@@ -91,9 +88,9 @@ class AlbumRepository
     /**
      * Получение по имени (точное совпадение)
      * @param string $name 
-     * @return AlbumModel|null
+     * @return array|null
      */
-    public function getByName(string $name): ?AlbumModel
+    public function getByName(string $name): ?array
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM albums 
@@ -104,8 +101,7 @@ class AlbumRepository
         $stmt->execute(['name' => $name]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $result ? new AlbumModel($result) : null;
+        return $result;
     }
 
     /**
@@ -150,8 +146,7 @@ class AlbumRepository
 
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return array_map(fn($row) => new AlbumModel($row), $results);
+        return $results;
     }
 
     /**
@@ -159,7 +154,7 @@ class AlbumRepository
      * @param string $id
      * @return array
      */
-    public function getById(string $id): ?AlbumModel
+    public function getById(string $id): ?array
     {   
         $stmt = $this->pdo->prepare("
             SELECT * FROM albums
@@ -169,7 +164,7 @@ class AlbumRepository
             'id' => $id
         ]);
         if ($stmt->rowCount() == 1){
-            return new AlbumModel($stmt->fetch(PDO::FETCH_ASSOC));
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
         return null;
     }
@@ -192,15 +187,15 @@ class AlbumRepository
             'offset' => $offset
         ]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new AlbumModel($row), $rows);
+        return $rows;
     }
 
     /**
      * Создание записи альбома
-     * @param AlbumCreateDto $dto - объект дто
+     * @param $dto - объект дто
      * @return bool - результат сохранения
      */
-    public function create(AlbumCreateDTO $dto): bool
+    public function create($dto): bool
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO albums (

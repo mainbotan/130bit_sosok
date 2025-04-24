@@ -31,7 +31,7 @@ if ($spotify_autho_answer->code === 200){
     // $spotify_artists_service = new SpotifyArtistsService($spotify_artists_api);
 
     // $spotify_artist_answer = $spotify_artists_service->getArtistById(
-    //     '0Y5tJX1MQlPlqiwlOH1tJY', []
+    //     '5q1NzLZwErZ9ujzqZKL0YZ', []
     // );
     // var_dump($spotify_artist_answer);
 

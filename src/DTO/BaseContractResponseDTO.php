@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class ServicesResponseDTO {
+class BaseContractResponseDTO {
     function __construct(
         public mixed $result, 
         public int $code, 

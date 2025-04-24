@@ -2,11 +2,8 @@
 namespace App\Repositories;
 
 use PDO;
-use App\DTO\ArtistCreateDTO;
-use App\DTO\ArtistUpdateDTO;
-use App\Models\Artist as ArtistModel;
 
-class ArtistRepository
+class ArtistsRepository
 {
     public function __construct(
         private PDO $pdo
@@ -32,7 +29,7 @@ class ArtistRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new ArtistModel($row), $results);
+        return $results;
     }
 
     /**
@@ -58,7 +55,7 @@ class ArtistRepository
      * @param ArtistUpdateDTO $dto
      * @return bool 
      */
-    public function update(string $id, ArtistUpdateDTO $dto): bool
+    public function update(string $id, $dto): bool
     {
         $fields = $dto->getFields();
 
@@ -92,7 +89,7 @@ class ArtistRepository
      * @param string $name 
      * @return ArtistModel|null
      */
-    public function getByName(string $name): ?ArtistModel
+    public function getByName(string $name): ?array
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM artists 
@@ -104,7 +101,7 @@ class ArtistRepository
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result ? new ArtistModel($result) : null;
+        return $result ?? null;
     }
 
     /**
@@ -149,8 +146,7 @@ class ArtistRepository
 
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return array_map(fn($row) => new ArtistModel($row), $results);
+        return $results;
     }
 
     /**
@@ -158,7 +154,7 @@ class ArtistRepository
      * @param string $id
      * @return ArtistModel|null
      */
-    public function getById(string $id): ?ArtistModel
+    public function getById(string $id): ?array
     {   
         $stmt = $this->pdo->prepare("
             SELECT * FROM artists
@@ -167,7 +163,7 @@ class ArtistRepository
         $stmt->execute(['id' => $id]);
 
         if ($stmt->rowCount() == 1) {
-            return new ArtistModel($stmt->fetch(PDO::FETCH_ASSOC));
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
         return null;
     }
@@ -188,15 +184,15 @@ class ArtistRepository
         $stmt->execute(['limit' => $limit, 'offset' => $offset]);
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new ArtistModel($row), $rows);
+        return $rows;
     }
 
     /**
      * Создание записи артиста
-     * @param ArtistCreateDTO $dto - объект DTO
+     * @param $dto - объект DTO
      * @return bool - результат сохранения
      */
-    public function create(ArtistCreateDTO $dto): bool
+    public function create($dto): bool
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO artists (

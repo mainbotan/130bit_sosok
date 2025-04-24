@@ -2,17 +2,15 @@
 
 namespace App\Services\Spotify;
 
-use App\Services\BaseService as BaseService;
+use App\Contracts\BaseContract as BaseContract;
 use App\Api\Spotify\Artists as SpotifyArtistsApi;
 use App\Factories\SpotifyDTOFactory;
 
-class ArtistsService extends BaseService{
-    private SpotifyDTOFactory $spotify_dto_factory;
+class ArtistsService extends BaseContract {
     public function __construct(
-        private SpotifyArtistsApi $spotify_artists
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifyArtistsApi $spotify_artists,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Получение артиста по ID

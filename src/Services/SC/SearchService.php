@@ -2,17 +2,15 @@
 
 namespace App\Services\SC;
 
-use App\Services\BaseService as BaseService;
 use App\Api\SC\Search as SCSearchApi;
+use App\Contracts\BaseContract;
 use App\Factories\SCDTOFactory;
 
-class SearchService extends BaseService{
-    private SCDTOFactory $sc_dto_factory;
+class SearchService extends BaseContract {
     public function __construct(
-        private SCSearchApi $sc_search
-    ) { 
-        $this->sc_dto_factory = new SCDTOFactory();
-    }
+        private SCSearchApi $sc_search,
+        private SCDTOFactory $sc_dto_factory
+    ) { }
 
     /**
      * Поиск
@@ -30,7 +28,7 @@ class SearchService extends BaseService{
             if (empty($result)) {
                 return parent::response(null, self::HTTP_NOT_FOUND, 'Result not found');
             }
-            $tracks = $this->sc_dto_factory::tracks($result, true);
+            $tracks = $this->sc_dto_factory::tracks($result, false);
             return parent::response($tracks);
         } catch (\Throwable $th) {
             return parent::response(

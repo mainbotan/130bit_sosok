@@ -16,16 +16,14 @@ $sc_autho_service = new SCAuthoService();
 $sc_autho_answer = $sc_autho_service->getRouter();
 if ($sc_autho_answer->code === 200){
 
-
     // Тест сервиса поиска
 
-    $sc_search_api = new SCSearchApi($sc_autho_answer->result);
-    $sc_search_service = new SCSearchService($sc_search_api);
+    // $sc_search_api = new SCSearchApi($sc_autho_answer->result);
+    // $sc_search_service = new SCSearchService($sc_search_api);
 
-    $sc_search_answer = $sc_search_service->search (
-        'Knife Talk - 21 Savage & Drake', ['limit' => 15]
-    );
-    var_dump($sc_search_answer);
-
+    // $sc_search_answer = $sc_search_service->search (
+    //     'Knife Talk - 21 Savage & Drake', ['limit' => 15]
+    // );
+    // var_dump($sc_search_answer);
 
 }

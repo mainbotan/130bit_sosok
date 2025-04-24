@@ -2,17 +2,15 @@
 
 namespace App\Services\Genius;
 
-use App\Services\BaseService as BaseService;
 use App\Api\Genius\Search as GeniusSearchApi;
+use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
-class SearchService extends BaseService{
-    private GeniusDTOFactory $genius_dto_factory;
+class SearchService extends BaseContract {
     public function __construct(
-        private GeniusSearchApi $genius_search
-    ) { 
-        $this->genius_dto_factory = new GeniusDTOFactory();
-    }
+        private GeniusSearchApi $genius_search,
+        private GeniusDTOFactory $genius_dto_factory
+    ) { }
 
     /**
      * Поиск
