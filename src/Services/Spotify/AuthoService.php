@@ -3,15 +3,15 @@
 namespace App\Services\Spotify;
 
 use Exception;
-use App\Services\BaseService as BaseService;
 use App\Api\Spotify\Router as SpotifyRouter;
 use App\Api\Spotify\Autho as SpotifyAuthoApi;
 use App\Core\RedisCache;
 use App\Services\LoggerService as LoggerService;
 use App\Services\ProxyService as ProxyService;
 use App\config\proxy as ProxyConfig;
+use App\Contracts\BaseContract;
 
-class AuthoService extends BaseService {
+class AuthoService extends BaseContract {
     public function getRouter() {
         // Тягаем конфиг спотика
         $spotify_config = [

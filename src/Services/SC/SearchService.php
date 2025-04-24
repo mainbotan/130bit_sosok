@@ -2,11 +2,11 @@
 
 namespace App\Services\SC;
 
-use App\Services\BaseService as BaseService;
 use App\Api\SC\Search as SCSearchApi;
+use App\Contracts\BaseContract;
 use App\Factories\SCDTOFactory;
 
-class SearchService extends BaseService{
+class SearchService extends BaseContract {
     private SCDTOFactory $sc_dto_factory;
     public function __construct(
         private SCSearchApi $sc_search

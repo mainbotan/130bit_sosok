@@ -2,11 +2,11 @@
 
 namespace App\Services\Spotify;
 
-use App\Services\BaseService as BaseService;
 use App\Api\Spotify\Playlists as SpotifyPlaylistsApi;
+use App\Contracts\BaseContract;
 use App\Factories\SpotifyDTOFactory;
 
-class PlaylistsService extends BaseService{
+class PlaylistsService extends BaseContract {
     private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
         private SpotifyPlaylistsApi $spotify_playlists

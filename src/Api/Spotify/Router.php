@@ -72,16 +72,16 @@ class Router {
             $this->logger->error("CURL error: {$curlError}");
             throw new \Exception("CURL error: $curlError");
         }
-
         // Декодируем ответ
         $parsed = json_decode($response, true);
-        // if (json_last_error() !== JSON_ERROR_NONE) {
-        //     $this->logger->error("JSON decode error: " . json_last_error_msg());
-        //     throw new \Exception("JSON decode error: " . json_last_error_msg());
-        // }
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->logger->error("JSON decode error: " . json_last_error_msg());
+            throw new \Exception("JSON decode error: " . json_last_error_msg());
+        }
 
         // Обрабатываем ошибки API
-        if ($httpCode >= 400) {
+        $sp_httpCode = isset($parsed['error']['status']) ? (int) $parsed['error']['status'] : 200;
+        if ($httpCode >= 400 or $sp_httpCode >= 400) {
             $errorMsg = $parsed['error']['message'] ?? 'Unknown error';
             $this->logger->error("Spotify API error ($httpCode): $errorMsg");
             throw new \Exception("Spotify API error ($httpCode): $errorMsg");

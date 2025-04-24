@@ -2,11 +2,11 @@
 
 namespace App\Services\Genius;
 
-use App\Services\BaseService as BaseService;
 use App\Api\Genius\Songs as GeniusSongsApi;
+use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
-class SongsService extends BaseService{
+class SongsService extends BaseContract {
     private GeniusDTOFactory $genius_dto_factory;
     public function __construct(
         private GeniusSongsApi $genius_songs

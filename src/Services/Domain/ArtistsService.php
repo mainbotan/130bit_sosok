@@ -2,11 +2,11 @@
 
 namespace App\Services\Domain;
 
-use App\Services\BaseService as BaseService;
+use App\Contracts\BaseContract;
 use App\Repositories\ArtistsRepository as ArtistsRepository;
 use App\Factories\DomainDTOFactory as DomainDTOFactory;
 
-class ArtistsService extends BaseService
+class ArtistsService extends BaseContract
 {
     private DomainDTOFactory $domain_dto_factory;
     

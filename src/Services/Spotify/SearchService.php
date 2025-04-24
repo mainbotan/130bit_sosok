@@ -2,11 +2,11 @@
 
 namespace App\Services\Spotify;
 
-use App\Services\BaseService as BaseService;
 use App\Api\Spotify\Search as SpotifySearchApi;
+use App\Contracts\BaseContract;
 use App\Factories\SpotifyDTOFactory;
 
-class SearchService extends BaseService{
+class SearchService extends BaseContract {
     private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
         private SpotifySearchApi $spotify_search

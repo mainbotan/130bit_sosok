@@ -2,10 +2,10 @@
 
 namespace App\Services\Domain;
 
-use App\Services\BaseService as BaseService;
+use App\Contracts\BaseContract;
 use App\Core\Database as Database;
 
-class AuthoService extends BaseService{
+class AuthoService extends BaseContract {
     public function getPDO () {
         try {
             $pdo = Database::getInstance();

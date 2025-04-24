@@ -3,14 +3,14 @@
 namespace App\Services\SC;
 
 use Exception;
-use App\Services\BaseService as BaseService;
 use App\Api\SC\Router as SCRouter;
 use App\Core\RedisCache;
 use App\Services\LoggerService as LoggerService;
 use App\Services\ProxyService as ProxyService;
 use App\config\proxy as ProxyConfig;
+use App\Contracts\BaseContract;
 
-class AuthoService extends BaseService {
+class AuthoService extends BaseContract {
     public function getRouter() {
         try {
             $proxy_config = new ProxyConfig();
