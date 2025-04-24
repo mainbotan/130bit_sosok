@@ -10,6 +10,7 @@ abstract class BaseService
     const HTTP_NOT_FOUND = 404;
     const HTTP_ERROR = 500;
     const HTTP_FAIL_AUTH = 401;
+    const HTTP_BAD_REQUEST = 400;
 
     /**
      * Форматирует ответ сервиса.

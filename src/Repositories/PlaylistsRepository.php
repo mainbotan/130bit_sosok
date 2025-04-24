@@ -3,11 +3,8 @@
 namespace App\Repositories;
 
 use PDO;
-use App\DTO\PlaylistCreateDTO;
-use App\DTO\PlaylistUpdateDTO;
-use App\Models\Playlist;
 
-class PlaylistRepository
+class PlaylistsRepository
 {
     public function __construct(
         private PDO $pdo
@@ -35,49 +32,49 @@ class PlaylistRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new Playlist($row), $results);
+        return $results;
     }
 
     /**
      * Получение плейлиста по Id
      * @param string $id
-     * @return Playlist|null
+     * @return array|null
      */
-    public function getById(string $id): ?Playlist
+    public function getById(string $id): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM playlists WHERE id = :id");
         $stmt->execute(['id' => $id]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? new Playlist($row) : null;
+        return $row ?? null;
     }
 
     /**
      * Получение плейлиста по URI
      * @param string $uri
-     * @return Playlist|null
+     * @return array|null
      */
-    public function getByUri(string $uri): ?Playlist
+    public function getByUri(string $uri): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM playlists WHERE uri = :uri LIMIT 1");
         $stmt->execute(['uri' => $uri]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? new Playlist($row) : null;
+        return $row ?? null;
     }
 
     /**
      * Получение плейлиста по имени (точное совпадение)
      * @param string $name
-     * @return Playlist|null
+     * @return array|null
      */
-    public function getByName(string $name): ?Playlist
+    public function getByName(string $name): ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM playlists WHERE name = :name LIMIT 1");
         $stmt->execute(['name' => $name]);
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? new Playlist($row) : null;
+        return $row ?? null;
     }
 
     /**
@@ -119,7 +116,7 @@ class PlaylistRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new Playlist($row), $results);
+        return $results;
     }
 
     /**
@@ -139,15 +136,15 @@ class PlaylistRepository
         $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
-        return array_map(fn($row) => new Playlist($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
      * Создание плейлиста
-     * @param PlaylistCreateDTO $dto
+     * @param $dto
      * @return bool
      */
-    public function create(PlaylistCreateDTO $dto): bool
+    public function create($dto): bool
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO playlists (
@@ -182,10 +179,10 @@ class PlaylistRepository
     /**
      * Обновление плейлиста
      * @param string $id
-     * @param PlaylistUpdateDTO $dto
+     * @param $dto
      * @return bool
      */
-    public function update(string $id, PlaylistUpdateDTO $dto): bool
+    public function update(string $id, $dto): bool
     {
         $fields = $dto->getFields();
         if (empty($fields)) return false;

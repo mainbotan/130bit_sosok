@@ -3,11 +3,8 @@
 namespace App\Repositories;
 
 use PDO;
-use App\DTO\TrackCreateDTO;
-use App\DTO\TrackUpdateDTO;
-use App\Models\Track as TrackModel;
 
-class TrackRepository
+class TracksRepository
 {
     public function __construct(
         private PDO $pdo
@@ -35,15 +32,15 @@ class TrackRepository
         $stmt->execute();
 
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new TrackModel($row), $results);
+        return $results;
     }
 
     /**
      * Получение трека по Id
      * @param string $id
-     * @return TrackModel|null
+     * @return array|null
      */
-    public function getById(string $id): ?TrackModel
+    public function getById(string $id): ?array
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM tracks
@@ -52,7 +49,7 @@ class TrackRepository
         $stmt->execute(['id' => $id]);
 
         if ($stmt->rowCount() == 1) {
-            return new TrackModel($stmt->fetch(PDO::FETCH_ASSOC));
+            return $stmt->fetch(PDO::FETCH_ASSOC);
         }
         return null;
     }
@@ -62,7 +59,7 @@ class TrackRepository
      * @param string $uri
      * @return TrackModel|null
      */
-    public function getByUri(string $uri): ?TrackModel
+    public function getByUri(string $uri): ?array
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM tracks
@@ -72,16 +69,15 @@ class TrackRepository
         $stmt->execute(['uri' => $uri]);
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $result ? new TrackModel($result) : null;
+        return $result;
     }
 
     /**
      * Получение трека по имени (точное совпадение)
      * @param string $name
-     * @return TrackModel|null
+     * @return array|null
      */
-    public function getByName(string $name): ?TrackModel
+    public function getByName(string $name): ?array
     {
         $stmt = $this->pdo->prepare("
             SELECT * FROM tracks
@@ -92,7 +88,7 @@ class TrackRepository
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result ? new TrackModel($result) : null;
+        return $result ?? null;
     }
 
     /**
@@ -135,8 +131,7 @@ class TrackRepository
 
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return array_map(fn($row) => new TrackModel($row), $results);
+        return $results;
     }
 
     /**
@@ -157,15 +152,15 @@ class TrackRepository
         $stmt->execute();
 
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return array_map(fn($row) => new TrackModel($row), $rows);
+        return $rows;
     }
 
     /**
      * Создание записи о треке
-     * @param TrackCreateDTO $dto - объект DTO
+     * @param $dto - объект DTO
      * @return bool - результат сохранения
      */
-    public function create(TrackCreateDTO $dto): bool
+    public function create($dto): bool
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO tracks (
@@ -205,10 +200,10 @@ class TrackRepository
     /**
      * Изменение данных о треке
      * @param string $id
-     * @param TrackUpdateDTO $dto
+     * @param $dto
      * @return bool
      */
-    public function update(string $id, TrackUpdateDTO $dto): bool
+    public function update(string $id, $dto): bool
     {
         $fields = $dto->getFields();
 

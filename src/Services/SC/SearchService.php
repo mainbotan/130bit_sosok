@@ -30,7 +30,7 @@ class SearchService extends BaseService{
             if (empty($result)) {
                 return parent::response(null, self::HTTP_NOT_FOUND, 'Result not found');
             }
-            $tracks = $this->sc_dto_factory::tracks($result, true);
+            $tracks = $this->sc_dto_factory::tracks($result, false);
             return parent::response($tracks);
         } catch (\Throwable $th) {
             return parent::response(
