@@ -8,13 +8,11 @@ use App\Factories\DomainDTOFactory as DomainDTOFactory;
 
 class AlbumsService extends BaseContract
 {
-    private DomainDTOFactory $domain_dto_factory;
     
     public function __construct(
-        private AlbumsRepository $albums_repository
-    ) {
-        $this->domain_dto_factory = new DomainDTOFactory();
-    }
+        private AlbumsRepository $albums_repository,
+        private DomainDTOFactory $domain_dto_factory
+    ) { }
 
     /**
      * Получение всех альбомов с пагинацией

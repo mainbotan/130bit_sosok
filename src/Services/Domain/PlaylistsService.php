@@ -8,13 +8,11 @@ use App\Factories\DomainDTOFactory as DomainDTOFactory;
 
 class PlaylistsService extends BaseContract
 {
-    private DomainDTOFactory $domain_dto_factory;
     
     public function __construct(
-        private PlaylistsRepository $playlists_repository
-    ) {
-        $this->domain_dto_factory = new DomainDTOFactory();
-    }
+        private PlaylistsRepository $playlists_repository,
+        private DomainDTOFactory $domain_dto_factory
+    ) { }
 
     /**
      * Получение всех плейлистов с пагинацией

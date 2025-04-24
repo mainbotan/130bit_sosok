@@ -7,12 +7,10 @@ use App\Api\Spotify\Albums as SpotifyAlbumsApi;
 use App\Factories\SpotifyDTOFactory;
 
 class AlbumsService extends BaseContract {
-    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
-        private SpotifyAlbumsApi $spotify_albums
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifyAlbumsApi $spotify_albums,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Получение альбома по ID

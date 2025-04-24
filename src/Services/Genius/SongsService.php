@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
 class SongsService extends BaseContract {
-    private GeniusDTOFactory $genius_dto_factory;
     public function __construct(
-        private GeniusSongsApi $genius_songs
-    ) { 
-        $this->genius_dto_factory = new GeniusDTOFactory();
-    }
+        private GeniusSongsApi $genius_songs,
+        private GeniusDTOFactory $genius_dto_factory
+    ) { }
 
     /**
      * Получение трека по ID

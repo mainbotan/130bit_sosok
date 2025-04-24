@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\SpotifyDTOFactory;
 
 class TracksService extends BaseContract {
-    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
-        private SpotifyTracksApi $spotify_tracks
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifyTracksApi $spotify_tracks,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Получение трека по ID

@@ -7,12 +7,10 @@ use App\Api\Spotify\Artists as SpotifyArtistsApi;
 use App\Factories\SpotifyDTOFactory;
 
 class ArtistsService extends BaseContract {
-    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
-        private SpotifyArtistsApi $spotify_artists
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifyArtistsApi $spotify_artists,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Получение артиста по ID

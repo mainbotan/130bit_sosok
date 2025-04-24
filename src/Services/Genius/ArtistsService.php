@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
 class ArtistsService extends BaseContract {
-    private GeniusDTOFactory $genius_dto_factory;
     public function __construct(
-        private GeniusArtistsApi $genius_artists
-    ) { 
-        $this->genius_dto_factory = new GeniusDTOFactory();
-    }
+        private GeniusArtistsApi $genius_artists,
+        private GeniusDTOFactory $genius_dto_factory
+    ) { }
 
     /**
      * Получение артиста по ID

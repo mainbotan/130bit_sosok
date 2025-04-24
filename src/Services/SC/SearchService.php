@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\SCDTOFactory;
 
 class SearchService extends BaseContract {
-    private SCDTOFactory $sc_dto_factory;
     public function __construct(
-        private SCSearchApi $sc_search
-    ) { 
-        $this->sc_dto_factory = new SCDTOFactory();
-    }
+        private SCSearchApi $sc_search,
+        private SCDTOFactory $sc_dto_factory
+    ) { }
 
     /**
      * Поиск

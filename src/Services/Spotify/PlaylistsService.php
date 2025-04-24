@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\SpotifyDTOFactory;
 
 class PlaylistsService extends BaseContract {
-    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
-        private SpotifyPlaylistsApi $spotify_playlists
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifyPlaylistsApi $spotify_playlists,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Получение плейлиста по ID

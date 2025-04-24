@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\SpotifyDTOFactory;
 
 class SearchService extends BaseContract {
-    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct(
-        private SpotifySearchApi $spotify_search
-    ) { 
-        $this->spotify_dto_factory = new SpotifyDTOFactory();
-    }
+        private SpotifySearchApi $spotify_search,
+        private SpotifyDTOFactory $spotify_dto_factory
+    ) { }
 
     /**
      * Поиск 

@@ -8,13 +8,10 @@ use App\Factories\DomainDTOFactory as DomainDTOFactory;
 
 class TracksService extends BaseContract
 {
-    private DomainDTOFactory $domain_dto_factory;
-    
     public function __construct(
-        private TracksRepository $tracks_repository
-    ) {
-        $this->domain_dto_factory = new DomainDTOFactory();
-    }
+        private TracksRepository $tracks_repository,
+        private DomainDTOFactory $domain_dto_factory
+    ) { }
 
     /**
      * Получение всех треков с пагинацией

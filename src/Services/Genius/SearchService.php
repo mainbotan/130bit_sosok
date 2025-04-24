@@ -7,12 +7,10 @@ use App\Contracts\BaseContract;
 use App\Factories\GeniusDTOFactory;
 
 class SearchService extends BaseContract {
-    private GeniusDTOFactory $genius_dto_factory;
     public function __construct(
-        private GeniusSearchApi $genius_search
-    ) { 
-        $this->genius_dto_factory = new GeniusDTOFactory();
-    }
+        private GeniusSearchApi $genius_search,
+        private GeniusDTOFactory $genius_dto_factory
+    ) { }
 
     /**
      * Поиск
