@@ -6,7 +6,7 @@ use Exception;
 
 class TrackSCDTO
 {
-    public string $id;
+    public string $sc_id;
     public string $uri;
     public string $title;
     public ?string $full_name;
@@ -27,7 +27,7 @@ class TrackSCDTO
     public function __construct(array $data, bool $encode = true)
     {
         // Required fields
-        $this->id = (string)($data['id'] ?? throw new InvalidArgumentException('Missing track ID'));
+        $this->sc_id = (string)($data['id'] ?? throw new InvalidArgumentException('Missing track ID'));
         $this->uri = $data['uri'] ?? "soundcloud:track:{$this->id}";
         $this->title = $data['title'] ?? 'Untitled Track';
         
