@@ -1,22 +1,22 @@
 <?php
 
-namespace App\UseCases\Spotify\Artist;
+namespace App\UseCases\Domain\Artists;
 
 // Контракт
 use App\Contracts\BaseContract;
-use App\DI\SpotifyServicesDI;
+use App\DI\DomainServicesDI;
 
 // Трейт
-use App\UseCases\Concerns\SpotifyTrait;
+use App\UseCases\Concerns\DomainTrait;
 
-class GetTopTracks extends BaseContract {
-    use SpotifyTrait;
-
+class GetSeveral extends BaseContract {
+    use DomainTrait;
+    
     public function __construct(bool $storage_metric = false)
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $id, array $options = [])
+    public function execute(array $ids, array $options = [])
     {
         $this->metrics->start();
 
@@ -24,8 +24,6 @@ class GetTopTracks extends BaseContract {
         if ($service_request->code !== 200) {
             return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $this->exit($service_request->result->getArtistTopTracks(
-            $id, $options
-        ), 'success');
+        return $this->exit($service_request->result->getSeveralArtists($ids, $options));
     }
 }

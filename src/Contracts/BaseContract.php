@@ -23,14 +23,30 @@ abstract class BaseContract
     protected function response(
         mixed $result, 
         int $code = self::HTTP_OK, 
-        ?string $error = null
+        ?string $error = null,
+        ?array $metrics = null
     ): BaseContractResponseDTO {
         return new BaseContractResponseDTO(
             $result,
             $code,
-            $error
+            $error,
+            $metrics
         );
     }
     
-    // Можно добавить другие общие методы (логирование, валидацию и т.д.)
+    /**
+     * Унифицированный выход из UseCase с метриками
+     * 
+     * @param object $response Объект ответа (должен содержать result, code, error)
+     * @param string $status Статус операции (success/error)
+     */
+    protected function exit(object $response, string $status = 'success')
+    {
+        return $this->response(
+            $response->result ?? null,
+            $response->code ?? 500,
+            $response->error ?? null,
+            $this->metrics->end($status) // автоматически прикрепляет метрики
+        );
+    }
 }

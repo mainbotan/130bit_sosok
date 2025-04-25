@@ -1,17 +1,17 @@
 <?php
 
-namespace App\UseCases\Spotify\Artist;
+namespace App\UseCases\Genius\Track;
 
 // Контракт
 use App\Contracts\BaseContract;
-use App\DI\SpotifyServicesDI;
+use App\DI\GeniusServicesDI;
 
 // Трейт
-use App\UseCases\Concerns\SpotifyTrait;
+use App\UseCases\Concerns\GeniusTrait;
 
-class GetTopTracks extends BaseContract {
-    use SpotifyTrait;
-
+class GetById extends BaseContract {
+    use GeniusTrait;
+    
     public function __construct(bool $storage_metric = false)
     {
         $this->initServices($storage_metric);
@@ -20,12 +20,10 @@ class GetTopTracks extends BaseContract {
     {
         $this->metrics->start();
 
-        $service_request = $this->di->build($this->di::SERVICE_ARTISTS);
+        $service_request = $this->di->build($this->di::SERVICE_TRACKS);
         if ($service_request->code !== 200) {
             return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $this->exit($service_request->result->getArtistTopTracks(
-            $id, $options
-        ), 'success');
+        return $this->exit($service_request->result->getSongById($id), 'success');
     }
 }

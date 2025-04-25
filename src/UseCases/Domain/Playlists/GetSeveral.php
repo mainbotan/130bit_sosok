@@ -1,22 +1,22 @@
 <?php
 
-namespace App\UseCases\Spotify\Playlist;
+namespace App\UseCases\Domain\Playlists;
 
 // Контракт
 use App\Contracts\BaseContract;
-use App\DI\SpotifyServicesDI;
+use App\DI\DomainServicesDI;
 
 // Трейт
-use App\UseCases\Concerns\SpotifyTrait;
+use App\UseCases\Concerns\DomainTrait;
 
-class GetById extends BaseContract {
-    use SpotifyTrait;
-
+class GetSeveral extends BaseContract {
+    use DomainTrait;
+    
     public function __construct(bool $storage_metric = false)
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $id, array $options = [])
+    public function execute(array $ids, array $options = [])
     {
         $this->metrics->start();
 
@@ -24,6 +24,6 @@ class GetById extends BaseContract {
         if ($service_request->code !== 200) {
             return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $this->exit($service_request->result->getPlaylistById($id), 'success');
+        return $this->exit($service_request->result->getSeveralPlaylists($ids, $options));
     }
 }

@@ -1,29 +1,29 @@
 <?php
 
-namespace App\UseCases\Spotify\Artist;
+namespace App\UseCases\SC\Search;
 
 // Контракт
 use App\Contracts\BaseContract;
-use App\DI\SpotifyServicesDI;
+use App\DI\SCServicesDI;
 
 // Трейт
-use App\UseCases\Concerns\SpotifyTrait;
+use App\UseCases\Concerns\SCTrait;
 
-class GetById extends BaseContract {
-    use SpotifyTrait;
-
+class SearchByQuery extends BaseContract {
+    use SCTrait;
+    
     public function __construct(bool $storage_metric = false)
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $id, array $options = [])
+    public function execute(string $query, array $options = [])
     {
         $this->metrics->start();
-
-        $service_request = $this->di->build($this->di::SERVICE_ARTISTS);
+        
+        $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {
             return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $this->exit($service_request->result->getArtistById($id), 'status');
+        return $this->exit($service_request->result->search($query, $options), 'success');
     }
 }
