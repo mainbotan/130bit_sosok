@@ -5,33 +5,38 @@ namespace App\UseCases\SC\Track;
 use App\Contracts\BaseContract;
 use App\DI\SCServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\SCTrait;
+
 class GetByName extends BaseContract 
 {
-    private SCServicesDI $di;
+    use SCTrait;
     
-    public function __construct()
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new SCServicesDI();
+        $this->initSpotifyServices($storage_metric);
     }
     
     public function execute(string $name, ?string $primary_artist_name = null)
     {
+        $this->metrics->start();
+        
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {
-            return $service_request;
+            return $this->exit($service_request, 'error');
         }
         
         $query = $primary_artist_name ? "$name - $primary_artist_name" : $name;
         $service_request = $service_request->result->search($query, []);
         
         if ($service_request->code !== 200) {
-            return $service_request;
+            return $this->exit($service_request, 'error');
         }
         $best_match = $this->findBestMatch($service_request->result, $name, $primary_artist_name);
         if ($best_match === null) { 
-            return parent::response(null, self::HTTP_NOT_FOUND, 'Track from SoundCloud not found'); 
+            return $this->exit(parent::response(null, self::HTTP_NOT_FOUND, 'Track from SoundCloud not found'), 'error'); 
         }
-        return parent::response($best_match);
+        return $this->exit(parent::response($best_match), 'success');
     }
 
     private function findBestMatch(array $tracks, string $trackName, ?string $primaryArtistName = null): ?object

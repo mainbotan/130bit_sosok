@@ -6,18 +6,24 @@ namespace App\UseCases\SC\Search;
 use App\Contracts\BaseContract;
 use App\DI\SCServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\SCTrait;
+
 class SearchByQuery extends BaseContract {
-    private SCServicesDI $di;
-    public function __construct()
+    use SCTrait;
+    
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new SCServicesDI();
+        $this->initSpotifyServices($storage_metric);
     }
     public function execute(string $query, array $options = [])
     {
+        $this->metrics->start();
+        
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {
-            return $service_request; // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $service_request->result->search($query, $options);
+        return $this->exit($service_request->result->search($query, $options), 'success');
     }
 }

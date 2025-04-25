@@ -6,29 +6,45 @@ namespace App\UseCases\Genius\Artist;
 use App\Contracts\BaseContract;
 use App\DI\GeniusServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\GeniusTrait;
+
 class GetByName extends BaseContract {
-    private GeniusServicesDI $di;
-    public function __construct()
+    use GeniusTrait;
+    
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new GeniusServicesDI();
+        $this->initSpotifyServices($storage_metric);
     }
     public function execute(string $query, array $options = [])
     {
+        $this->metrics->start();
+
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {
-            return $service_request; // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
         $service_request = $service_request->result->search($query);
         if ($service_request->code !== 200) {
-            return $service_request;
+            return $this->exit($service_request, 'error');
         }
 
+        // Ищем артиста
         $searched_tracks = $service_request->result;
         $best_artist = $this->findBestArtistMatch($searched_tracks, $query);
         if ($best_artist === null) {
-            return parent::response(null, self::HTTP_NOT_FOUND, 'Artist from genius not found');
+            return $this->exit(parent::response(null, self::HTTP_NOT_FOUND, 'Artist from genius not found'), 'error');
         }
-        return parent::response($best_artist);
+        
+        if (isset($options['deep']) and $options['deep']) {
+            // Запрашиваем подробности
+            $service_request = $this->di->build($this->di::SERVICE_ARTISTS);
+            if ($service_request->code !== 200) {
+                return $this->exit($service_request, 'error'); // ошибка конфигурации
+            }
+            return $this->exit($service_request->result->getArtistById($best_artist->genius_id), 'success');
+        }
+        return $this->exit(parent::response($best_artist));
     }
 
     // Алгоритм поиска лучшего совпадения
