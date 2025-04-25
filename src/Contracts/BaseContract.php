@@ -23,12 +23,14 @@ abstract class BaseContract
     protected function response(
         mixed $result, 
         int $code = self::HTTP_OK, 
-        ?string $error = null
+        ?string $error = null,
+        ?array $metrics = null
     ): BaseContractResponseDTO {
         return new BaseContractResponseDTO(
             $result,
             $code,
-            $error
+            $error,
+            $metrics
         );
     }
     

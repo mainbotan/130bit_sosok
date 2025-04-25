@@ -6,18 +6,32 @@ namespace App\UseCases\Spotify\Album;
 use App\Contracts\BaseContract;
 use App\DI\SpotifyServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\SpotifyTrait;
+
 class GetTracks extends BaseContract {
-    private SpotifyServicesDI $di;
-    public function __construct()
+    use SpotifyTrait;
+
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new SpotifyServicesDI();
+        $this->initSpotifyServices($storage_metric);
     }
     public function execute(string $id, array $options = [])
     {
+        $this->metrics->start();
+
         $service_request = $this->di->build($this->di::SERVICE_ALBUMS);
         if ($service_request->code !== 200) {
-            return $service_request; // ошибка конфигурации
+            return $this->exit($service_request); // ошибка конфигурации
         }
-        return $service_request->result->getAlbumTracks($id, $options);
+        return $this->exit($service_request->result->getAlbumTracks($id, $options));
+    }
+    private function exit(object $result_response) {
+        return parent::response(
+            $result_response->result,
+            $result_response->code,
+            $result_response->error,
+            $this->metrics->end('success')
+        );
     }
 }
