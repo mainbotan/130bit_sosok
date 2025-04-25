@@ -34,5 +34,19 @@ abstract class BaseContract
         );
     }
     
-    // Можно добавить другие общие методы (логирование, валидацию и т.д.)
+    /**
+     * Унифицированный выход из UseCase с метриками
+     * 
+     * @param object $response Объект ответа (должен содержать result, code, error)
+     * @param string $status Статус операции (success/error)
+     */
+    protected function exit(object $response, string $status = 'success')
+    {
+        return $this->response(
+            $response->result ?? null,
+            $response->code ?? 500,
+            $response->error ?? null,
+            $this->metrics->end($status) // автоматически прикрепляет метрики
+        );
+    }
 }

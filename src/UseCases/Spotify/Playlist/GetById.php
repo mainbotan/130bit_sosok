@@ -6,18 +6,24 @@ namespace App\UseCases\Spotify\Playlist;
 use App\Contracts\BaseContract;
 use App\DI\SpotifyServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\SpotifyTrait;
+
 class GetById extends BaseContract {
-    private SpotifyServicesDI $di;
-    public function __construct()
+    use SpotifyTrait;
+
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new SpotifyServicesDI();
+        $this->initSpotifyServices($storage_metric);
     }
     public function execute(string $id, array $options = [])
     {
+        $this->metrics->start();
+
         $service_request = $this->di->build($this->di::SERVICE_PLAYLISTS);
         if ($service_request->code !== 200) {
-            return $service_request; // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $service_request->result->getPlaylistById($id);
+        return $this->exit($service_request->result->getPlaylistById($id), 'success');
     }
 }

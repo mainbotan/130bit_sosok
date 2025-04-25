@@ -22,16 +22,8 @@ class GetById extends BaseContract {
 
         $service_request = $this->di->build($this->di::SERVICE_ARTISTS);
         if ($service_request->code !== 200) {
-            return $this->exit($service_request); // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $this->exit($service_request->result->getArtistById($id));
-    }
-    private function exit(object $result_response) {
-        return parent::response(
-            $result_response->result,
-            $result_response->code,
-            $result_response->error,
-            $this->metrics->end('success')
-        );
+        return $this->exit($service_request->result->getArtistById($id), 'status');
     }
 }

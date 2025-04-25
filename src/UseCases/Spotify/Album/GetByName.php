@@ -23,24 +23,16 @@ class GetByName extends BaseContract {
         // Обращаемся к поисковику
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {
-            return $this->exit($service_request); // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
         $service = $service_request->result;
         $service_answer = $service->search($name, [
             'type' => 'album', 'limit' => 1
         ]);
         if ($service_answer->code !== 200) {
-            return $this->exit($service_answer);
+            return $this->exit($service_answer, 'error');
         }
         $album = $service_answer->result['albums'][0];
-        return $this->exit(parent::response($album));
-    }
-    private function exit(object $result_response) {
-        return parent::response(
-            $result_response->result,
-            $result_response->code,
-            $result_response->error,
-            $this->metrics->end('success')
-        );
+        return $this->exit(parent::response($album), 'status');
     }
 }
