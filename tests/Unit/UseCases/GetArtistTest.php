@@ -8,8 +8,8 @@ echo "<pre>";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../');
 $dotenv->load();
 
-use App\UseCases\Spotify\Playlist\GetTracks;
+use App\UseCases\Genius\Artist\GetTracks;
 $use_case = new GetTracks();
-$result = $use_case->execute('5JcLzm5HVkwb5l4Cea2zcK');
+$result = $use_case->execute('2197');
 
 var_dump($result);
