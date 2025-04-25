@@ -10,7 +10,7 @@ trait GeniusTrait
     protected GeniusServicesDI $di;
     protected MetricsService $metrics;
 
-    public function initSpotifyServices(bool $storage_metric = false, float $costMultiplier = 20): void
+    public function initServices(bool $storage_metric = false, float $costMultiplier = 20): void
     {
         $this->di = new GeniusServicesDI();
         $this->metrics = new MetricsService($costMultiplier, $storage_metric);

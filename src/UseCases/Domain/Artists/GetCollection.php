@@ -6,18 +6,24 @@ namespace App\UseCases\Domain\Artists;
 use App\Contracts\BaseContract;
 use App\DI\DomainServicesDI;
 
+// Трейт
+use App\UseCases\Concerns\DomainTrait;
+
 class GetCollection extends BaseContract {
-    private DomainServicesDI $di;
-    public function __construct()
+    use DomainTrait;
+    
+    public function __construct(bool $storage_metric = false)
     {
-        $this->di = new DomainServicesDI();
+        $this->initServices($storage_metric);
     }
     public function execute(array $options = [])
     {
+        $this->metrics->start();
+
         $service_request = $this->di->build($this->di::SERVICE_ARTISTS);
         if ($service_request->code !== 200) {
-            return $service_request; // ошибка конфигурации
+            return $this->exit($service_request, 'error'); // ошибка конфигурации
         }
-        return $service_request->result->getAllArtists($options);
+        return $this->exit($service_request->result->getAllArtists($options));
     }
 }

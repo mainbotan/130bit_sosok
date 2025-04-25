@@ -10,7 +10,7 @@ trait SCTrait
     protected SCServicesDI $di;
     protected MetricsService $metrics;
 
-    public function initSpotifyServices(bool $storage_metric = false, float $costMultiplier = 20): void
+    public function initServices(bool $storage_metric = false, float $costMultiplier = 20): void
     {
         $this->di = new SCServicesDI();
         $this->metrics = new MetricsService($costMultiplier, $storage_metric);

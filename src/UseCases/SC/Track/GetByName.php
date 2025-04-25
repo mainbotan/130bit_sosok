@@ -14,7 +14,7 @@ class GetByName extends BaseContract
     
     public function __construct(bool $storage_metric = false)
     {
-        $this->initSpotifyServices($storage_metric);
+        $this->initServices($storage_metric);
     }
     
     public function execute(string $name, ?string $primary_artist_name = null)
