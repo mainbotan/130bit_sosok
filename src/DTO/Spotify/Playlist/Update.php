@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Spotify\Playlist;
 
-class PlaylistUpdateDTO
+class Update
 {
     private array $fields = [];
 

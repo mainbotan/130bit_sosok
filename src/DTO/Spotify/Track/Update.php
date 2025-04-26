@@ -1,17 +1,30 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Spotify\Track;
 
-class ArtistUpdateDTO
+class Update
 {
     private array $fields = [];
 
     public function __construct(array $data)
     {
-        // Пример валидации только известных полей
         $allowed = [
-            'name', 'uri', 'is_verified', 'is_tracking', 'followers', 'images', 
-            'genres', 'meta', 'popularity', 'primary_artist_id', 'primary_artist_name'
+            'uri',
+            'name',
+            'artists',
+            'album',
+            'primary_artist_id',
+            'album_id',
+            'explicit',
+            'is_local',
+            'disc_number',
+            'track_number',
+            'duration_ms',
+            'genres',
+            'meta',
+            'popularity',
+            'preview_url',
+            'isrc'
         ];
 
         foreach ($allowed as $key) {

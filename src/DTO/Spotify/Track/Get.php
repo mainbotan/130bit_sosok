@@ -1,14 +1,14 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Spotify\Track;
 
 use App\Helpers\RemoveAvailableMarkets;
 
 // Вложенные структуры
-use App\DTO\AlbumCreateDTO;
-use App\DTO\ArtistCreateDTO;
+use App\DTO\Spotify\Album\Get as AlbumGet;
+use App\DTO\Spotify\Artist\Get as ArtistGet;
 
-class TrackCreateDTO
+class Get
 {
     public string $id;
     public string $uri;
@@ -34,7 +34,7 @@ class TrackCreateDTO
     public string | array | null $preview_url;
     public string | array | null $isrc;
 
-    public function __construct(array $data, $encode = true)
+    public function __construct(array $data)
     {
         $cleaned = RemoveAvailableMarkets::clean($data);
 
@@ -57,24 +57,16 @@ class TrackCreateDTO
         $this->preview_url = $cleaned['preview_url'] ?? null;
         $this->isrc = $cleaned['external_ids']['isrc'] ?? null;
 
-        if ($encode) {
-            $this->artists = json_encode($cleaned['artists'], JSON_UNESCAPED_UNICODE);
-            $this->album = json_encode($cleaned['album'], JSON_UNESCAPED_UNICODE);
-
-            $this->genres = isset($cleaned['genres']) ? json_encode($cleaned['genres'], JSON_UNESCAPED_UNICODE) : null;
-            $this->meta = isset($cleaned['meta']) ? json_encode($cleaned['meta'], JSON_UNESCAPED_UNICODE) : '{}';
-        } else {
-            if (isset($cleaned['artists'])) {
-                $this->artists = array_map(
-                    fn(array $item) => new ArtistCreateDTO($item, $encode),
-                    $cleaned['artists']
-                ) ?? null;
-            }
-            if (isset($cleaned['album'])) {
-                $this->album = new AlbumCreateDTO($cleaned['album'], $encode) ?? null;
-            }
-            $this->genres = $cleaned['genres'] ?? null;
-            $this->meta = $cleaned['meta'] ?? null;
+        if (isset($cleaned['artists'])) {
+            $this->artists = array_map(
+                fn(array $item) => new ArtistGet($item),
+                $cleaned['artists']
+            ) ?? null;
         }
+        if (isset($cleaned['album'])) {
+            $this->album = new AlbumGet($cleaned['album']) ?? null;
+        }
+        $this->genres = $cleaned['genres'] ?? null;
+        $this->meta = $cleaned['meta'] ?? null;
     }
 }

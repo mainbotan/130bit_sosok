@@ -2,22 +2,22 @@
 
 namespace App\Factories;
 
-use App\DTO\TrackSCDTO;
+use App\DTO\SC\Track\Get as TrackGet;
 
 class SCDTOFactory
 {
     // Одиночные объекты
-    public static function track(array $data, $encode=true): TrackSCDTO
+    public static function track(array $data): TrackGet
     {
-        return new TrackSCDTO($data, $encode);
+        return new TrackGet($data);
     }
 
 
     // Коллекции
-    public static function tracks(array $items, $encode=true): array
+    public static function tracks(array $items): array
     {
         return array_map(
-            fn(array $item) => new TrackSCDTO($item, $encode),
+            fn(array $item) => new TrackGet($item),
             $items
         );
     }

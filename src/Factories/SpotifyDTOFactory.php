@@ -2,74 +2,74 @@
 
 namespace App\Factories;
 
-use App\DTO\ArtistCreateDTO;
-use App\DTO\AlbumCreateDTO;
-use App\DTO\TrackCreateDTO;
-use App\DTO\PlaylistCreateDTO;
+use App\DTO\Spotify\Artist\Get as ArtistGet;
+use App\DTO\Spotify\Album\Get as AlbumGet;
+use App\DTO\Spotify\Playlist\Get as PlaylistGet;
+use App\DTO\Spotify\Track\Get as TrackGet;
 use App\Models\Playlist;
 
 class SpotifyDTOFactory
 {
     // Одиночные объекты
-    public static function artist(array $data, $encode=true): ArtistCreateDTO
+    public static function artist(array $data): ArtistGet
     {
-        return new ArtistCreateDTO($data, $encode);
+        return new ArtistGet($data);
     }
 
-    public static function album(array $data, $encode=true): AlbumCreateDTO
+    public static function album(array $data): AlbumGet
     {
-        return new AlbumCreateDTO($data, $encode);
+        return new AlbumGet($data);
     }
 
-    public static function track(array $data, $encode=true): TrackCreateDTO
+    public static function track(array $data): TrackGet
     {
-        return new TrackCreateDTO($data, $encode);
+        return new TrackGet($data);
     }
 
-    public static function playlist(array $data, $encode=true): PlaylistCreateDTO
+    public static function playlist(array $data): PlaylistGet
     {
-        return new PlaylistCreateDTO($data, $encode);
+        return new PlaylistGet($data);
     }
 
     // Коллекции
-    public static function artists(array $items, $encode=true): array
+    public static function artists(array $items): array
     {
         return array_map(
-            fn(array $item) => new ArtistCreateDTO($item, $encode),
+            fn(array $item) => new ArtistGet($item),
             $items
         );
     }
 
-    public static function albums(array $items, $encode=true): array
+    public static function albums(array $items): array
     {
         return array_map(
-            fn(array $item) => new AlbumCreateDTO($item, $encode),
+            fn(array $item) => new AlbumGet($item),
             $items
         );
     }
 
-    public static function tracks(array $items, $encode=true): array
+    public static function tracks(array $items): array
     {
         return array_map(
-            fn(array $item) => new TrackCreateDTO($item, $encode),
+            fn(array $item) => new TrackGet($item),
             $items
         );
     }
 
-    public static function playlists(array $items, $encode=true): array
+    public static function playlists(array $items): array
     {
         return array_map(
-            fn(array $item) => new PlaylistCreateDTO($item, $encode),
+            fn(array $item) => new PlaylistGet($item),
             $items
         );
     }
 
     // Специальные коллекции
 
-    public static function playlist_tracks(array $items, $encode=true): array
+    public static function playlist_tracks(array $items): array
     {
         return array_map(
-            fn(array $item) => new TrackCreateDTO($item['track'], $encode),
+            fn(array $item) => new TrackGet($item['track']),
             $items
         );
     }

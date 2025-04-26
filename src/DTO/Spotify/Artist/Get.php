@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Spotify\Artist;
 
-class ArtistCreateDTO
+class Get
 {
     public string $id;
     public string $uri;
@@ -15,7 +15,7 @@ class ArtistCreateDTO
     public string | array | null $meta;
     public int $popularity;
 
-    public function __construct(array $data, $encode = true)
+    public function __construct(array $data)
     {
         $this->id = $data['id'];
         $this->uri = $data['uri'];
@@ -25,14 +25,8 @@ class ArtistCreateDTO
         $this->followers = (int)($data['followers']['total'] ?? 0);
         $this->popularity = (int)($data['popularity'] ?? 30);
 
-        if ($encode) {
-            $this->images = json_encode($data['images'] ?? [], JSON_UNESCAPED_UNICODE);
-            $this->genres = isset($data['genres']) ? json_encode($data['genres'], JSON_UNESCAPED_UNICODE) : null;
-            $this->meta = isset($data['meta']) ? json_encode($data['meta'], JSON_UNESCAPED_UNICODE) : '{}';
-        } else {
-            $this->images = $data['images'] ?? null;
-            $this->genres = $data['genres'] ?? null;
-            $this->meta = $data['meta'] ?? null;
-        }
+        $this->images = $data['images'] ?? null;
+        $this->genres = $data['genres'] ?? null;
+        $this->meta = $data['meta'] ?? null;
     }
 }

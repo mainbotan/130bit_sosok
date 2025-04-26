@@ -1,14 +1,13 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Spotify\Playlist;
 
 use App\Helpers\RemoveAvailableMarkets;
 
 // Вложенные структуры
-use App\DTO\TrackCreateDTO;
-use App\DTO\ArtistCreateDTO;
+use App\DTO\Spotify\Track\Get as TrackGet;
 
-class PlaylistCreateDTO
+class Get
 {
     public string $id;
     public string $uri;
@@ -31,7 +30,7 @@ class PlaylistCreateDTO
 
     public ?string $snapshot_id;
 
-    public function __construct(array $data, bool $encode = true)
+    public function __construct(array $data)
     {
         $cleaned = RemoveAvailableMarkets::clean($data);
 
@@ -55,17 +54,11 @@ class PlaylistCreateDTO
 
         $this->snapshot_id = $cleaned['snapshot_id'] ?? null;
 
-        if ($encode){
-            if (isset($cleaned['tracks']['items'])) {
-                $this->tracks = json_encode($cleaned['tracks']['items'] ?? [], JSON_UNESCAPED_UNICODE);
-            }
-        }else{
-            if (isset($cleaned['tracks']['items'])){
-                $this->tracks = array_map(
-                    fn(array $item) => new TrackCreateDTO($item['track'], $encode),
-                    $cleaned['tracks']['items']
-                ) ?? null;
-            }
+        if (isset($cleaned['tracks']['items'])){
+            $this->tracks = array_map(
+                fn(array $item) => new TrackGet($item['track']),
+                $cleaned['tracks']['items']
+            ) ?? null;
         }
     }
 }

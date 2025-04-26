@@ -1,14 +1,14 @@
 <?php
-namespace App\DTO;
+namespace App\DTO\Genius\Track;
 
 use Exception;
 use InvalidArgumentException;
 
 
 // Вложенные структуры
-use App\DTO\ArtistAdvancedDTODTO;
+use App\DTO\Genius\Artist\Get as ArtistGet;
 
-class TrackAdvancedDTO
+class Get
 {
     public string $genius_id;
     public ?string $genius_url;
@@ -26,7 +26,7 @@ class TrackAdvancedDTO
     public array|string|null $stats;
     public array|string|null $artists;
 
-    public function __construct(array $data, bool $encode = true)
+    public function __construct(array $data)
     {
         // Required fields (throw exception if missing)
         $this->genius_id = $data['id'] ?? throw new InvalidArgumentException('Missing track ID');
@@ -55,10 +55,8 @@ class TrackAdvancedDTO
         $this->description = $this->extractDescription($data['description'] ?? null);
 
         // Encode or keep as objects
-        $this->stats = $this->safeEncode($data['stats'] ?? [], $encode);
-        $this->artists = $encode 
-            ? $this->safeEncode($artists, $encode) 
-            : $this->mapArtists($artists, $encode);
+        $this->stats = $data['stats'] ?? [];
+        $this->artists = $this->mapArtists($artists);
     }
 
     protected function extractDescription(?array $description): ?string
@@ -86,23 +84,11 @@ class TrackAdvancedDTO
         );
     }
 
-    protected function mapArtists(array $artists, bool $encode): array
+    protected function mapArtists(array $artists): array
     {
         return array_map(
-            fn(array $artist) => new ArtistAdvancedDTO($artist, $encode),
+            fn(array $artist) => new ArtistGet($artist),
             $artists
         );
-    }
-
-    protected function safeEncode(mixed $data, bool $encode): string|array
-    {
-        if (!$encode) {
-            return $data;
-        }
-        try {
-            return json_encode($data, JSON_UNESCAPED_UNICODE) ?: '{}';
-        } catch (Exception) {
-            return '{}';
-        }
     }
 }

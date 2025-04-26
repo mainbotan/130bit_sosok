@@ -33,6 +33,6 @@ class GetByName extends BaseContract {
             return $this->exit($service_answer, 'error');
         }
         $album = $service_answer->result['albums'][0];
-        return $this->exit(parent::response($album), 'status');
+        return $this->exit(parent::response($album), 'success');
     }
 }
