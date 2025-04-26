@@ -5,13 +5,15 @@ namespace App\Services\Domain;
 use App\Contracts\BaseContract;
 use App\Repositories\AlbumsRepository as AlbumsRepository;
 use App\Factories\DomainDTOFactory as DomainDTOFactory;
+use App\Factories\SpotifyDTOFactory as SpotifyDTOFactory;
 
 class AlbumsService extends BaseContract
 {
     
     public function __construct(
         private AlbumsRepository $albums_repository,
-        private DomainDTOFactory $domain_dto_factory
+        private DomainDTOFactory $domain_dto_factory,
+        private SpotifyDTOFactory $spotify_dto_factory
     ) { }
 
     /**
@@ -148,6 +150,10 @@ class AlbumsService extends BaseContract
     public function createAlbum($dto)
     {
         try {
+
+            // Сериализуем
+            $dto = $this->spotify_dto_factory::album_serialize($dto);
+
             $success = $this->albums_repository->create($dto);
             
             if (!$success) {

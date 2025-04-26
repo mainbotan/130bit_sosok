@@ -4,35 +4,21 @@ namespace App\DTO\Spotify\Track;
 
 use App\Helpers\RemoveAvailableMarkets;
 
+// Трейт основы
+use App\DTO\Spotify\Track\Base;
+
 // Вложенные структуры
 use App\DTO\Spotify\Album\Get as AlbumGet;
 use App\DTO\Spotify\Artist\Get as ArtistGet;
 
 class Get
 {
-    public string $id;
-    public string $uri;
-    public string $name;
-
-    public string | array | null $artists;
-    public string | object | null $album;
-
-    public string $primary_artist_id;
-    public ?string $album_id;
-
-    public bool $explicit;
-    public bool $is_local;
-
-    public ?int $disc_number;
-    public ?int $track_number;
-    public ?int $duration_ms;
-
-    public string | array | null $genres;
-    public string | array | null $meta;
-    public int $popularity;
-
-    public string | array | null $preview_url;
-    public string | array | null $isrc;
+    use Base; 
+    
+    public ?array $genres;
+    public ?array $meta;
+    public ?array $artists;
+    public ?AlbumGet $album;
 
     public function __construct(array $data)
     {
@@ -62,10 +48,11 @@ class Get
                 fn(array $item) => new ArtistGet($item),
                 $cleaned['artists']
             ) ?? null;
-        }
+        } else { $this->artists = null; }
         if (isset($cleaned['album'])) {
             $this->album = new AlbumGet($cleaned['album']) ?? null;
-        }
+        } else{ $this->album = null; }
+        
         $this->genres = $cleaned['genres'] ?? null;
         $this->meta = $cleaned['meta'] ?? null;
     }

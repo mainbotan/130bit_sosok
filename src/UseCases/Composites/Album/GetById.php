@@ -8,38 +8,41 @@ use App\Contracts\BaseContract;
 // Трейт
 use App\UseCases\Concerns\CompositeTrait;
 
+// Тянем нужные юзкейсы
+use App\UseCases\Domain\Album\Save as DomainSave;
+use App\UseCases\Domain\Album\GetById as DomainGetById;
+use App\UseCases\Spotify\Album\GetById as SpotifyGetById;
+
 class GetById extends BaseContract {
     use CompositeTrait;
-    
+
+    private SpotifyGetById $spotify_get_by_id;
+    private DomainGetById $domain_get_by_id;
+    private DomainSave $domain_save;
     public function __construct(bool $storage_metric = false)
     {
         $this->initServices($storage_metric);
+        
+        // Отключаем метрики памями для дочерних юз кейсов
+        $this->spotify_get_by_id = new SpotifyGetById(false);
+        $this->domain_get_by_id = new DomainGetById(false);
+        $this->domain_save = new DomainSave(false);
     }
     public function execute(string $id, array $options = [])
     {
         $this->metrics->start();
 
-        // Проверяем холодный кэш
-        $domain_service_request = $this->domain_di->build($this->domain_di::SERVICE_ALBUMS);
-        if ($domain_service_request->code !== 200) {
-            return $this->exit($domain_service_request, 'error'); // ошибка конфигурации
-        }
-        $service_response = $domain_service_request->result->getAlbumById($id);
-        if ($service_response->code === 200) {
-            return $this->exit($service_response);
-        }
-
-        // Подтягиваем со спотика
-        $service_request = $this->spotify_di->build($this->domain_di::SERVICE_ALBUMS);
-        if ($service_request->code !== 200) {
-            return $this->exit($service_request, 'error'); // ошибка конфигурации
-        }
-        $service_response = $service_request->result->getAlbumById($id);
-        return $this->exit($service_response);
+        // Чекаем холодный кэш
+        $domain_request = $this->domain_get_by_id->execute($id);
+        if ($domain_request->code === 200) { return $this->exit($domain_request); }
         
-        // Сохраняем 
-        // $service_response = $domain_service_request->result->createAlbum($domain_service_request->result);
-        // return $this->exit($service_response);
+        // Чекаем спотик
+        $spotify_request = $this->spotify_get_by_id->execute($id);
+        if ($spotify_request->code !== 200){ return $this->exit($spotify_request, 'error'); }
 
+        // Сохраняем
+        $domain_request = $this->domain_save->execute($spotify_request->result);
+        if ($domain_request->code !== 200) { return $this->exit($domain_request, 'error'); }
+        return $this->exit($domain_request);
     }
 }

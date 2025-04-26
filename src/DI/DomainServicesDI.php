@@ -19,6 +19,9 @@ use App\Repositories\PlaylistsRepository as PlaylistsRepository;
 // Фабрика
 use App\Factories\DomainDTOFactory;
 
+// Нужно для преобразования дтох
+use App\Factories\SpotifyDTOFactory;
+
 class DomainServicesDI extends BaseContract
 {   
     // Глобальные ошибки
@@ -33,10 +36,12 @@ class DomainServicesDI extends BaseContract
 
     private $pdo_response;
     private DomainDTOFactory $domain_dto_factory;
+    private SpotifyDTOFactory $spotify_dto_factory;
     public function __construct() {
         $autho_service = new AuthoService();
         $this->pdo_response = $autho_service->getPDO();
         $this->domain_dto_factory = new DomainDTOFactory();
+        $this->spotify_dto_factory = new SpotifyDTOFactory();
     }
 
     // Точка входа
@@ -67,7 +72,10 @@ class DomainServicesDI extends BaseContract
     private function buildAlbumsService()
     {
         $repository = new AlbumsRepository($this->pdo_response->result);
-        return parent::response(new AlbumsService($repository, $this->domain_dto_factory));
+        return parent::response(new AlbumsService(
+            $repository, $this->domain_dto_factory,
+            $this->spotify_dto_factory
+        ));
     }
     private function buildTracksService()
     {

@@ -2,11 +2,18 @@
 
 namespace App\Factories;
 
+// Get DTO
 use App\DTO\Spotify\Artist\Get as ArtistGet;
 use App\DTO\Spotify\Album\Get as AlbumGet;
 use App\DTO\Spotify\Playlist\Get as PlaylistGet;
 use App\DTO\Spotify\Track\Get as TrackGet;
-use App\Models\Playlist;
+
+// Create DTO Serializers
+use App\DTO\Spotify\Album\Serialize as AlbumSerialize;
+use App\DTO\Spotify\Artist\Serialize as ArtistSerialize;
+use App\DTO\Spotify\Track\Serialize as TrackSerialize;
+use App\DTO\Spotify\Playlist\Serialize as PlaylistSerialize;
+
 
 class SpotifyDTOFactory
 {
@@ -15,7 +22,7 @@ class SpotifyDTOFactory
     {
         return new ArtistGet($data);
     }
-
+    
     public static function album(array $data): AlbumGet
     {
         return new AlbumGet($data);
@@ -29,6 +36,27 @@ class SpotifyDTOFactory
     public static function playlist(array $data): PlaylistGet
     {
         return new PlaylistGet($data);
+    }
+
+    // Сериализаторы
+    public static function artist_serialize(ArtistGet $data): ArtistSerialize
+    {
+        return new ArtistSerialize($data);
+    }
+    
+    public static function album_serialize(AlbumGet $data): AlbumSerialize
+    {
+        return new AlbumSerialize($data);
+    }
+
+    public static function track_serialize(TrackGet $data): TrackSerialize
+    {
+        return new TrackSerialize($data);
+    }
+
+    public static function playlist_serialize(PlaylistGet $data): PlaylistSerialize
+    {
+        return new PlaylistSerialize($data);
     }
 
     // Коллекции

@@ -2,18 +2,16 @@
 
 namespace App\DTO\Spotify\Artist;
 
+// Трейт основы
+use App\DTO\Spotify\Artist\Base;
+
 class Get
 {
-    public string $id;
-    public string $uri;
-    public string $name;
-    public bool $is_verified;
-    public bool $is_tracking;
-    public int $followers;
-    public string | array | null $images;
-    public string | array | null $genres;
-    public string | array | null $meta;
-    public int $popularity;
+    use Base;
+
+    public ?array $images;
+    public ?array $genres;
+    public ?array $meta;
 
     public function __construct(array $data)
     {

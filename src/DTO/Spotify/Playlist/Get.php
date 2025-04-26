@@ -7,28 +7,18 @@ use App\Helpers\RemoveAvailableMarkets;
 // Вложенные структуры
 use App\DTO\Spotify\Track\Get as TrackGet;
 
+// Трейт основы
+use App\DTO\Spotify\Playlist\Base;
+
 class Get
 {
-    public string $id;
-    public string $uri;
-    public string $name;
-    public ?string $description;
+    use Base;
 
-    public bool $collaborative;
-
-    public string $owner;
-    public string $owner_id;
-    public string $owner_name;
-
-    public string $images;
-    public string | array | null $tracks;
-
-    public int $followers;
-    public ?string $genres;
-    public string $meta;
-    public int $popularity;
-
-    public ?string $snapshot_id;
+    public ?array $owner;
+    public ?array $images;
+    public ?array $tracks;
+    public ?array $genres;
+    public ?array $meta;
 
     public function __construct(array $data)
     {
@@ -41,16 +31,22 @@ class Get
 
         $this->collaborative = (bool) ($cleaned['collaborative'] ?? false);
 
-        $this->owner = json_encode($cleaned['owner'], JSON_UNESCAPED_UNICODE);
-        $this->owner_id = $cleaned['owner']['id'];
-        $this->owner_name = $cleaned['owner']['display_name'] ?? $cleaned['owner']['id'];
+        if (isset($cleaned['owner'])) {
+            $this->owner = $cleaned['owner'];
+            $this->owner_id = $cleaned['owner']['id'];
+            $this->owner_name = $cleaned['owner']['display_name'];
+        } else {
+            $this->owner = null;
+            $this->owner_id = null;
+            $this->owner_name = null;
+        }
 
-        $this->images = json_encode($cleaned['images'] ?? [], JSON_UNESCAPED_UNICODE);
+        $this->images = isset($cleaned['images']) ? $cleaned['images'] : null;
         $this->followers = $cleaned['followers']['total'] ?? 0;
-        $this->genres = isset($cleaned['genres']) ? json_encode($cleaned['genres'], JSON_UNESCAPED_UNICODE) : null;
-        $this->meta = isset($cleaned['meta']) ? json_encode($cleaned['meta'], JSON_UNESCAPED_UNICODE) : '{}';
+        $this->genres = isset($cleaned['genres']) ? $cleaned['genres'] : null;
+        $this->meta = isset($cleaned['meta']) ? $cleaned['meta'] : null;
 
-        $this->popularity = (int) ($cleaned['popularity'] ?? 30);
+        $this->popularity = isset(($cleaned['popularity'])) ? (int) $cleaned['popularity'] : 30;
 
         $this->snapshot_id = $cleaned['snapshot_id'] ?? null;
 
@@ -59,6 +55,6 @@ class Get
                 fn(array $item) => new TrackGet($item['track']),
                 $cleaned['tracks']['items']
             ) ?? null;
-        }
+        } else{ $this->tracks = null; }
     }
 }
