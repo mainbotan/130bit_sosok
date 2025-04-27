@@ -28,16 +28,19 @@ class GetById extends BaseContract {
         $this->domain_get_by_id = new DomainGetById(false);
         $this->domain_save = new DomainSave(false);
     }
-    public function execute(string $id, array $options = [])
+    public function execute(array $data)
     {
         $this->metrics->start();
 
+        $id = isset($data['id']) ? $data['id'] : null;
+        $options = isset($data['options']) ? $data['options'] : [];
+
         // Чекаем холодный кэш
-        $domain_request = $this->domain_get_by_id->execute($id);
+        $domain_request = $this->domain_get_by_id->execute(['id' => $id]);
         if ($domain_request->code === 200) { return $this->exit($domain_request); }
         
         // Чекаем спотик
-        $spotify_request = $this->spotify_get_by_id->execute($id);
+        $spotify_request = $this->spotify_get_by_id->execute(['id' => $id]);
         if ($spotify_request->code !== 200){ return $this->exit($spotify_request, 'error'); }
 
         // Сохраняем

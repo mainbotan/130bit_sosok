@@ -8,9 +8,9 @@ echo "<pre>";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../');
 $dotenv->load();
 
-use App\UseCases\Composites\Album\GetById;
-$use_case = new GetById(true); 
-$result = $use_case->execute('5m0QGvbAbmhkBaoctKiVpp');
+use App\UseCases\Spotify\Album\GetByName;
+$use_case = new GetByName(true); 
+$result = $use_case->execute(['name' => 'In the Air']);
 
 // use App\UseCases\Domain\Albums\GetCollection;
 // $use_case = new GetCollection(true); 

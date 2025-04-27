@@ -16,9 +16,12 @@ class GetTracks extends BaseContract {
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $id, array $options = [])
+    public function execute(array $data)
     {
         $this->metrics->start();
+
+        $id = isset($data['id']) ? $data['id'] : '';
+        $options = isset($data['options']) ? $data['options'] : [];
 
         $service_request = $this->di->build($this->di::SERVICE_ALBUMS);
         if ($service_request->code !== 200) {

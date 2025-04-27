@@ -16,10 +16,12 @@ class GetCollection extends BaseContract {
     {
         $this->initServices($storage_metric);
     }
-    public function execute(array $options = [])
+    public function execute(array $data)
     {
         $this->metrics->start();
         
+        $options = isset($data['options']) ? $data['options'] : [];
+
         $service_request = $this->di->build($this->di::SERVICE_ALBUMS);
         if ($service_request->code !== 200) {
             return $this->exit($service_request, 'error'); // ошибка конфигурации
