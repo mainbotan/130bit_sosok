@@ -16,9 +16,12 @@ class SearchByQuery extends BaseContract {
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $query, array $options = [])
+    public function execute(array $data)
     {
         $this->metrics->start();
+
+        $query = isset($data['query']) ? $data['query'] : '';
+        $options = isset($data['options']) ? $data['options'] : [];
         
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {

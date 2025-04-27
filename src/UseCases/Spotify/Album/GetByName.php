@@ -16,9 +16,12 @@ class GetByName extends BaseContract {
     {
         $this->initServices($storage_metric);
     }
-    public function execute(string $name, array $options = [])
+    public function execute(array $data)
     {
         $this->metrics->start();
+
+        $name = isset($data['name']) ? $data['name'] : '';
+        $options = isset($data['options']) ? $data['options'] : [];
 
         // Обращаемся к поисковику
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
@@ -33,6 +36,6 @@ class GetByName extends BaseContract {
             return $this->exit($service_answer, 'error');
         }
         $album = $service_answer->result['albums'][0];
-        return $this->exit(parent::response($album), 'status');
+        return $this->exit(parent::response($album), 'success');
     }
 }

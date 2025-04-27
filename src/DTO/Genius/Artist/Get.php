@@ -1,10 +1,10 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\Genius\Artist;
 
 use Exception;
 
-class ArtistAdvancedDTO
+class Get
 {
     public string $genius_id;
     public ?string $genius_url;
@@ -19,7 +19,7 @@ class ArtistAdvancedDTO
     public array|string|null $alternate_names;
     public array|string|null $media;
 
-    public function __construct(array $data, bool $encode = true)
+    public function __construct(array $data)
     {
         // Required fields
         $this->genius_id = (string) $data['id'];
@@ -38,13 +38,10 @@ class ArtistAdvancedDTO
         $this->description = $this->extractDescription($data['description'] ?? null);
 
         // Social media
-        $this->media = $this->prepareMediaData($data, $encode);
+        $this->media = $this->prepareMediaData($data);
 
         // Alternate names
-        $this->alternate_names = $this->prepareAlternateNames(
-            $data['alternate_names'] ?? [], 
-            $encode
-        );
+        $this->alternate_names = $data['alternate_names'] ?? [];
     }
 
     protected function extractDescription(?array $description): ?string
@@ -59,7 +56,7 @@ class ArtistAdvancedDTO
             ?? null;
     }
 
-    protected function prepareMediaData(array $data, bool $encode): array|string
+    protected function prepareMediaData(array $data): array|string
     {
         if (isset($data['facebook_name']) or 
             isset($data['instagram_name']) or 
@@ -73,28 +70,6 @@ class ArtistAdvancedDTO
         } else {
             $media = [];
         }
-
-        if ($encode) {
-            try {
-                return json_encode($media, JSON_UNESCAPED_UNICODE);
-            } catch (Exception) {
-                return json_encode([], JSON_UNESCAPED_UNICODE);
-            }
-        }
-
         return $media;
-    }
-
-    protected function prepareAlternateNames(array $names, bool $encode): array|string
-    {
-        if ($encode) {
-            try {
-                return json_encode($names, JSON_UNESCAPED_UNICODE);
-            } catch (Exception) {
-                return json_encode([], JSON_UNESCAPED_UNICODE);
-            }
-        }
-
-        return $names;
     }
 }

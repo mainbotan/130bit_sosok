@@ -17,9 +17,12 @@ class GetByName extends BaseContract
         $this->initServices($storage_metric);
     }
     
-    public function execute(string $name, ?string $primary_artist_name = null)
+    public function execute(array $data)
     {
         $this->metrics->start();
+
+        $name = isset($data['name']) ? $data['name'] : '';
+        $primary_artist_name = isset($data['primary_artist_name']) ? $data['primary_artist_name'] : [];
         
         $service_request = $this->di->build($this->di::SERVICE_SEARCH);
         if ($service_request->code !== 200) {

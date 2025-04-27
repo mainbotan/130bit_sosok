@@ -1,10 +1,10 @@
 <?php
-namespace App\DTO;
+namespace App\DTO\SC\Track;
 
 use InvalidArgumentException;
 use Exception;
 
-class TrackSCDTO
+class Get
 {
     public string $sc_id;
     public string $uri;
@@ -24,11 +24,11 @@ class TrackSCDTO
     public string|array|null $publisher_metadata;
     public string|array|null $media;
 
-    public function __construct(array $data, bool $encode = true)
+    public function __construct(array $data)
     {
         // Required fields
         $this->sc_id = (string)($data['id'] ?? throw new InvalidArgumentException('Missing track ID'));
-        $this->uri = $data['uri'] ?? "soundcloud:track:{$this->id}";
+        $this->uri = $data['uri'] ?? "soundcloud:track:{$this->sc_id}";
         $this->title = $data['title'] ?? 'Untitled Track';
         
         // Optional fields
@@ -52,9 +52,9 @@ class TrackSCDTO
         );
 
         // Process complex fields with encoding flag
-        $this->user = $this->safeEncode($data['user'] ?? null, $encode);
-        $this->publisher_metadata = $this->safeEncode($data['publisher_metadata'] ?? null, $encode);
-        $this->media = $this->safeEncode($data['media'] ?? null, $encode);
+        $this->user = $data['user'];
+        $this->publisher_metadata = $data['publisher_metadata'];
+        $this->media = $data['media'] ?? null;
     }
 
     protected function parseReleaseDate(?string $date): ?string
@@ -68,23 +68,6 @@ class TrackSCDTO
             return $dt->format('Y-m-d');
         } catch (\Exception) {
             return null;
-        }
-    }
-
-    protected function safeEncode(mixed $data, bool $encode): string|array|null
-    {
-        if ($data === null) {
-            return null;
-        }
-
-        if (!$encode) {
-            return $data;
-        }
-
-        try {
-            return json_encode($data, JSON_UNESCAPED_UNICODE) ?: 'null';
-        } catch (Exception) {
-            return 'null';
         }
     }
 }

@@ -8,8 +8,13 @@ echo "<pre>";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__.'/../../../');
 $dotenv->load();
 
-use App\UseCases\Genius\Track\GetByName;
-$use_case = new GetByName(true);
-$result = $use_case->execute('pop out - playboi carti', ['deep' => true]);
+use App\UseCases\Spotify\Album\GetByName;
+$use_case = new GetByName(true); 
+$result = $use_case->execute(['name' => 'In the Air']);
+
+// use App\UseCases\Domain\Albums\GetCollection;
+// $use_case = new GetCollection(true); 
+// $result = $use_case->execute(['limit' => 20]);
+
 
 var_dump($result);
