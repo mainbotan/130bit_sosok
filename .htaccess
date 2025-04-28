@@ -1,0 +1,4 @@
+RewriteEngine On
+
+# Иначе — редиректим на index.php
+RewriteRule ^ index.php [QSA,L]
