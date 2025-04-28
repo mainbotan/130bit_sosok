@@ -4,7 +4,7 @@ namespace App\Resolvers;
 // Интерфейс резольвера
 use App\Resolvers\Concerns\BaseResolver as BaseResolver;
 
-class AlbumsResolver extends BaseResolver
+class SearchResolver extends BaseResolver
 {
     protected function routes(): array
     {
